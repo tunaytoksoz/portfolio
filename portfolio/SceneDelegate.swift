@@ -19,8 +19,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let windowScene = (scene as? UIWindowScene) else { return }
         let window = UIWindow(windowScene: windowScene)
         let networkService : NetworkServiceProtocol = NetworkService()
-        let currencyViewModel = currencyViewModel(networkService: networkService)
         let cdService = CoreDataService()
+        let currencyViewModel = currencyViewModel(networkService: networkService, cdService: cdService)
         let cdViewModel = coreDataViewModel(cdServiceProtocol: cdService)
         window.rootViewController = ViewController(currencyViewModel: currencyViewModel, cdViewModel: cdViewModel)
         self.window = window

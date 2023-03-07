@@ -27,6 +27,7 @@
 		661B918229AFC56D00648CB1 /* cdViewModelOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 661B918129AFC56D00648CB1 /* cdViewModelOutput.swift */; };
 		661B918429B0BF3900648CB1 /* currencyViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 661B918329B0BF3900648CB1 /* currencyViewModelTests.swift */; };
 		661B918629B0CA6100648CB1 /* cdViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 661B918529B0CA6100648CB1 /* cdViewModelTests.swift */; };
+		66452A2D29B5D4600073067E /* AlertManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66452A2C29B5D4600073067E /* AlertManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -70,6 +71,7 @@
 		661B918129AFC56D00648CB1 /* cdViewModelOutput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = cdViewModelOutput.swift; sourceTree = "<group>"; };
 		661B918329B0BF3900648CB1 /* currencyViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = currencyViewModelTests.swift; sourceTree = "<group>"; };
 		661B918529B0CA6100648CB1 /* cdViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = cdViewModelTests.swift; sourceTree = "<group>"; };
+		66452A2C29B5D4600073067E /* AlertManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -121,6 +123,7 @@
 		661B913429ACB0C900648CB1 /* portfolio */ = {
 			isa = PBXGroup;
 			children = (
+				66452A2929B4DB150073067E /* Support */,
 				661B916C29ACBBF300648CB1 /* Model */,
 				661B916B29ACBBE800648CB1 /* ViewModel */,
 				661B916A29ACBBDF00648CB1 /* View */,
@@ -197,6 +200,14 @@
 				661B917529AD364300648CB1 /* Portfolio.swift */,
 			);
 			path = Model;
+			sourceTree = "<group>";
+		};
+		66452A2929B4DB150073067E /* Support */ = {
+			isa = PBXGroup;
+			children = (
+				66452A2C29B5D4600073067E /* AlertManager.swift */,
+			);
+			path = Support;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -340,6 +351,7 @@
 				661B917229ACC3E500648CB1 /* currencyViewModel.swift in Sources */,
 				661B914029ACB0C900648CB1 /* portfolio.xcdatamodeld in Sources */,
 				661B917029ACBD2400648CB1 /* Currency.swift in Sources */,
+				66452A2D29B5D4600073067E /* AlertManager.swift in Sources */,
 				661B918029AFB4A300648CB1 /* currencyViewModelOutput.swift in Sources */,
 				661B917429AD324C00648CB1 /* CoreDataService.swift in Sources */,
 				661B913A29ACB0C900648CB1 /* ViewController.swift in Sources */,

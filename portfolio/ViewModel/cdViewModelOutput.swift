@@ -6,7 +6,9 @@
 //
 
 import Foundation
+import Charts
 
 protocol cdViewModelOutput : AnyObject {
     func updatePortfolioLabels(eur : Double, gbp : Double, rub : Double, usd : Double, isSucces : Bool)
+    
 }
