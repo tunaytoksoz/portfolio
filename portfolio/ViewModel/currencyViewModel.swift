@@ -100,7 +100,7 @@ class currencyViewModel {
     
     func calculatePercent(eur : Double,gbp : Double ,rub : Double,usd : Double) {
         var total = 0.0
-        
+        print(eur)
         cdService.getPortfolio { result in
                     switch result {
                     case .success(let portfolio):
@@ -132,58 +132,3 @@ class currencyViewModel {
         
     }
 }
-
-
-/**
- func getPortfolioPercent(){
-     networkService.getData(url: url!) { result in
-         switch result {
-         case .success(let data):
-             do {
-                 let currency = try JSONDecoder().decode(Currency.self, from: data)
-                 self.currenciesArray.append((currency.data.eur, currency.data.gbp, currency.data.rub, currency.data.usd))
-                 print("sdfs")
-                 self.cdService.getPortfolio { result in
-                     switch result{
-                     case .success(let portfolio):
-                         self.calculatePercent(eur: portfolio.eur / self.currenciesArray[0].eur,
-                                          gbp:  portfolio.gbp / self.currenciesArray[0].gbp,
-                                          rub: portfolio.rub / self.currenciesArray[0].rub,
-                                          usd: portfolio.usd / self.currenciesArray[0].usd)
-                         
-                     case .failure(let error):
-                         print(error.localizedDescription)
-                         self.eur.value = 0
-                         self.gbp.value = 0
-                         self.rub.value = 0
-                         self.usd.value = 0
-                         
-                     }
-                 }
-             } catch {
-                 self.currenciesArray.append((0,0,0,0))
-                 self.currenciesArray.removeAll()
-             }
-         case .failure(let error):
-             print(error.localizedDescription)
-         }
-     }
- }
- 
- func calculatePercent(eur : Double,gbp : Double ,rub : Double,usd : Double) {
-     let total = eur+gbp+rub+usd
-     
-     if total > 0 {
-         self.eur.value = eur * 100 / total
-         self.gbp.value = gbp * 100 / total
-         self.rub.value = rub * 100 / total
-         self.usd.value = usd * 100 / total
-         print("sfdklsd")
-     } else {
-         self.eur.value = 0
-         self.gbp.value = 0
-         self.rub.value = 0
-         self.usd.value = 0
-     }
- }
- */

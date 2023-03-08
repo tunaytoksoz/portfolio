@@ -8,11 +8,11 @@
 import Foundation
 
 // MARK: - Portfolio
-struct Portfolio: Codable {
+struct Portfolio: Codable, Hashable {
     var eur : Double
     var gbp : Double
     var rub : Double
     var usd : Double
-    var createdDate : Date?
-    var created : String?
+    var createdTime : Date?
+    var createdTimeString : String?
 }

@@ -12,13 +12,14 @@ final class currencyViewModelTests: XCTestCase {
     
     private var sut : currencyViewModel!
     private var networkService : MockNetworkService!
+    private var cdService : MockCoreDataService!
     private var currOutput : MockCurrencyViewModelOutput!
 
     override func setUpWithError() throws {
         // Put setup code here. This method is called before the invocation of each test method in the class.
         networkService = MockNetworkService()
         currOutput = MockCurrencyViewModelOutput()
-        sut = portfolio.currencyViewModel(networkService: networkService)
+        sut = portfolio.currencyViewModel(networkService: networkService, cdService: cdService)
         sut.output = currOutput
     }
 
@@ -80,6 +81,14 @@ class MockNetworkService : NetworkServiceProtocol {
 }
 
 class MockCurrencyViewModelOutput : currencyViewModelOutput {
+    func convertTL(eur: Double, gbp: Double, rub: Double, usd: Double) {
+        //
+    }
+    
+    func updatePiechart(eur: Double, gbp: Double, rub: Double, usd: Double) {
+        //
+    }
+    
     var updateViewArray : [(eur: Double, gbp: Double, rub: Double, usd: Double, isSucces: Bool)] = []
     func updateCurrencyLabels(eur: Double, gbp: Double, rub: Double, usd: Double, isSucces: Bool) {
         updateViewArray.append((eur,gbp,rub,usd,isSucces))

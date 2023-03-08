@@ -17,25 +17,28 @@ protocol CoreDataServiceProtocol {
 class CoreDataService : CoreDataServiceProtocol {
     
     let appDelegate = UIApplication.shared.delegate as! AppDelegate
+
     
+
     func getDate() -> String{
-        
-        let dateFormatterGet = DateFormatter()
-        dateFormatterGet.dateFormat = "MM/dd/yyyy"
+             
+             let dateFormatterGet = DateFormatter()
+             dateFormatterGet.dateFormat = "MM/dd/yyyy"
 
-        let dateFormatterPrint = DateFormatter()
-        dateFormatterPrint.dateFormat = "yyyy-MM-dd"
+             let dateFormatterPrint = DateFormatter()
+             dateFormatterPrint.dateFormat = "yyyy-MM-dd"
 
-        var now = Date().formatted(date: .numeric, time: .omitted)
-        
-        if let date = dateFormatterGet.date(from: "\(now)") {
-            now = dateFormatterPrint.string(from: date)
-        } else {
-           print("There was an error decoding the string")
-        }
-        
-        return now
+             var now = Date().formatted(date: .numeric, time: .omitted)
+             
+             if let date = dateFormatterGet.date(from: "\(now)") {
+                 now = dateFormatterPrint.string(from: date)
+             } else {
+                print("There was an error decoding the string")
+             }
+             
+             return now
     }
+         
 
     func savePortfolio(portfolio : Portfolio, completion: @escaping (Result<Bool,Error>) -> Void){
         
@@ -46,8 +49,8 @@ class CoreDataService : CoreDataServiceProtocol {
         curr.gbp = portfolio.gbp
         curr.rub = portfolio.rub
         curr.usd = portfolio.usd
-        curr.created = getDate()
-        
+        curr.createdTimeString = getDate()
+        curr.createdTime = Date()
         
         do {
             try context.save()
@@ -81,6 +84,7 @@ class CoreDataService : CoreDataServiceProtocol {
                 port.gbp += curr.gbp
                 port.rub += curr.rub
                 port.usd += curr.usd
+                // port.createdTime = currencies.last?.createdTime
             }
             
             completion(.success(port))

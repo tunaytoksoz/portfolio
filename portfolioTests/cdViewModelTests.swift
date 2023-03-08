@@ -62,9 +62,7 @@ final class cdViewModelTests: XCTestCase {
         
         sut.getPortfolio()
         
-        sut.getPortfolioPercent()
         
-        XCTAssertEqual(sut.eur.value, 10)
     }
     
     

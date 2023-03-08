@@ -269,6 +269,10 @@ class ViewController: UIViewController, currencyViewModelOutput, cdViewModelOutp
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
         
+        
+     
+
+        
         currencyViewModel.getCurrencyData()  // currency view
         currencyViewModel.updateChart() // piechart
         cdViewModel.getPortfolio() // portföy
@@ -402,6 +406,7 @@ class ViewController: UIViewController, currencyViewModelOutput, cdViewModelOutp
     
     // MARK: - Gbp Buttons
     @objc func didTapGbpSellButton(){
+        
         alertManager.showInputAlert(on: self, title: "Pound Sat", subtitle: "Portföydeki Toplam £: \(self.portfolioArray[0].gbp)", actionTitle: "Sat", actionHandler:  { text in
             guard let text = Double(text ?? "0") else { return }
             
