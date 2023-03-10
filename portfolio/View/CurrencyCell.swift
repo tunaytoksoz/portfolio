@@ -22,7 +22,7 @@ class CurrencyCell: UICollectionViewCell, SelfConfiguringCell {
         super.layoutSubviews()
     }
     
-    private let eurLabel: UILabel = {
+    private let topLeftLabel: UILabel = {
         let label = UILabel()
         label.textColor = .white
         label.textAlignment = .center
@@ -31,7 +31,7 @@ class CurrencyCell: UICollectionViewCell, SelfConfiguringCell {
         return label
     }()
     
-    private let gbpLabel: UILabel = {
+    private let topRightLabel: UILabel = {
         let label = UILabel()
         label.textColor = .white
         label.textAlignment = .center
@@ -40,7 +40,7 @@ class CurrencyCell: UICollectionViewCell, SelfConfiguringCell {
         return label
     }()
     
-    private let rubLabel: UILabel = {
+    private let bottomLeft: UILabel = {
         let label = UILabel()
         label.textColor = .white
         label.textAlignment = .center
@@ -49,7 +49,7 @@ class CurrencyCell: UICollectionViewCell, SelfConfiguringCell {
         return label
     }()
     
-    private let usdLabel: UILabel = {
+    private let bottomRight: UILabel = {
         let label = UILabel()
         label.textColor = .white
         label.textAlignment = .center
@@ -70,29 +70,29 @@ class CurrencyCell: UICollectionViewCell, SelfConfiguringCell {
         layer.cornerRadius = 8
         clipsToBounds = true
         
-        addSubview(eurLabel)
-        addSubview(gbpLabel)
-        addSubview(rubLabel)
-        addSubview(usdLabel)
+        addSubview(topLeftLabel)
+        addSubview(topRightLabel)
+        addSubview(bottomLeft)
+        addSubview(bottomRight)
         addSubview(activityIndicator)
         
-        eurLabel.translatesAutoresizingMaskIntoConstraints = false
-        gbpLabel.translatesAutoresizingMaskIntoConstraints = false
-        rubLabel.translatesAutoresizingMaskIntoConstraints = false
-        usdLabel.translatesAutoresizingMaskIntoConstraints = false
+        topLeftLabel.translatesAutoresizingMaskIntoConstraints = false
+        topRightLabel.translatesAutoresizingMaskIntoConstraints = false
+        bottomLeft.translatesAutoresizingMaskIntoConstraints = false
+        bottomRight.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
-            eurLabel.topAnchor.constraint(equalTo: topAnchor, constant: 10),
-            eurLabel.leftAnchor.constraint(equalTo: leftAnchor, constant: 10),
+            topLeftLabel.topAnchor.constraint(equalTo: topAnchor, constant: 10),
+            topLeftLabel.leftAnchor.constraint(equalTo: leftAnchor, constant: 10),
             
-            gbpLabel.topAnchor.constraint(equalTo: topAnchor, constant: 10),
-            gbpLabel.rightAnchor.constraint(equalTo: rightAnchor, constant: -10),
+            topRightLabel.topAnchor.constraint(equalTo: topAnchor, constant: 10),
+            topRightLabel.rightAnchor.constraint(equalTo: rightAnchor, constant: -10),
             
-            rubLabel.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -10),
-            rubLabel.leftAnchor.constraint(equalTo: leftAnchor, constant: 10),
+            bottomLeft.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -10),
+            bottomLeft.leftAnchor.constraint(equalTo: leftAnchor, constant: 10),
             
-            usdLabel.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -10),
-            usdLabel.rightAnchor.constraint(equalTo: rightAnchor, constant: -10),
+            bottomRight.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -10),
+            bottomRight.rightAnchor.constraint(equalTo: rightAnchor, constant: -10),
         ])
     }
     
@@ -100,10 +100,10 @@ class CurrencyCell: UICollectionViewCell, SelfConfiguringCell {
         DispatchQueue.main.async { [self] in
             if isSucces {
                 self.activityIndicator.stopAnimating()
-                self.eurLabel.text! = String(format: "\(key[0]): %.3f",  1 / value[0])
-                self.gbpLabel.text! = String(format: "\(key[1]): %.3f",  1 / value[1])
-                self.rubLabel.text! = String(format: "\(key[2]): %.3f",  1 / value[2])
-                self.usdLabel.text! = String(format: "\(key[3]): %.3f",  1 / value[3])
+                self.topLeftLabel.text! = String(format: "\(key[0]): %.3f",  1 / value[0])
+                self.topRightLabel.text! = String(format: "\(key[1]): %.3f",  1 / value[1])
+                self.bottomLeft.text! = String(format: "\(key[2]): %.3f",  1 / value[2])
+                self.bottomRight.text! = String(format: "\(key[3]): %.3f",  1 / value[3])
             } else {
                 self.activityIndicator.center = center
                 self.activityIndicator.tintColor = .link

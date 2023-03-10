@@ -18,7 +18,6 @@ class currencyViewModel {
     
     private var collectionArray : [collectionPortfolio] = []
     
-
     private var keys : [String] = [String]()
     private var values : [Double] = [Double]()
     
@@ -151,7 +150,7 @@ class currencyViewModel {
         }
         
         for array in collectinArray {
-            percentArray[array.name] = array.price * 100 / total
+            percentArray[array.name] = array.priceTL * 100 / total
         }
         
         self.createPieChart(percentArray: percentArray)
@@ -171,11 +170,10 @@ class currencyViewModel {
                 let entry = PieChartDataEntry(value: array.value, label: array.key)
                 entryPortfolios.append(entry)
             }
-            
+ 
             let dataSet = PieChartDataSet(entries: entryPortfolios)
-                
             dataSet.colors = ChartColorTemplates.colorful()
-
+            
             let data = PieChartData(dataSet: dataSet)
             pieChartView.data = data
         
@@ -188,10 +186,11 @@ class currencyViewModel {
             let setFormatter = DefaultValueFormatter(formatter: formatter)
             data.setValueFormatter(setFormatter)
             
-            pieChartView.legend.enabled = false
+            pieChartView.legend.enabled = true
             pieChartView.drawHoleEnabled = false
             pieChartView.isUserInteractionEnabled = false
             pieChartView.rotationAngle = 0
+            pieChartView.drawEntryLabelsEnabled = false
             
             pieChartView.frame = view.frame
             pieChartView.center = view.center

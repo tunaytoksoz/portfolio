@@ -136,8 +136,6 @@ extension PortfolioViewController : currencyViewModelOutput, cdViewModelOutput{
         }
     }
     
-    
-    
     func updatePiechart(view: UIView) {
         DispatchQueue.main.async {
             self.chartArray.removeAll()
@@ -203,6 +201,7 @@ extension PortfolioViewController {
                 let group = NSCollectionLayoutGroup.horizontal(layoutSize: .init(widthDimension: .fractionalWidth(1), heightDimension: .absolute(200)), subitems: [item])
                 
                 let section = NSCollectionLayoutSection(group: group)
+                
                 
                 section.orthogonalScrollingBehavior = .groupPagingCentered
                 

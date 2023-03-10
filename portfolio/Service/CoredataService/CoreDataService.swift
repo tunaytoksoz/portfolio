@@ -44,7 +44,7 @@ class CoreDataService : CoreDataServiceProtocol {
         
         let context = appDelegate.persistentContainer.viewContext
         
-        let port = MyPortfolio(context: context)
+        let port = Portfolio(context: context)
         port.name = portfolio.name
         port.value = portfolio.value
         port.createdTime = Date()
@@ -65,7 +65,7 @@ class CoreDataService : CoreDataServiceProtocol {
         
         let context = appDelegate.persistentContainer.viewContext
           
-        let fetchRequest : NSFetchRequest<MyPortfolio> = MyPortfolio.fetchRequest()
+        let fetchRequest : NSFetchRequest<Portfolio> = Portfolio.fetchRequest()
         
         var portArray : [portfolio] = [portfolio]()
         
