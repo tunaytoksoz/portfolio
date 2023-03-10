@@ -7,6 +7,7 @@
 
 import Foundation
 import Charts
+import UIKit
 
 class currencyViewModel {
     
@@ -15,8 +16,11 @@ class currencyViewModel {
     
     weak var output : currencyViewModelOutput?
     
-    private var currenciesArray : [(eur : Double, gbp : Double, rub : Double, usd : Double)] = []
+    private var collectionArray : [collectionPortfolio] = []
+    
 
+    private var keys : [String] = [String]()
+    private var values : [Double] = [Double]()
     
     init(networkService: NetworkServiceProtocol, cdService: CoreDataServiceProtocol, output: currencyViewModelOutput? = nil) {
         self.networkService = networkService
@@ -24,111 +28,175 @@ class currencyViewModel {
         self.output = output
     }
     
-    var eur : Double = 0.0
-    var gbp : Double = 0.0
-    var rub : Double = 0.0
-    var usd : Double = 0.0
-    
     private var currencyData : Currency?
     
-    let url = URL(string: "https://api.freecurrencyapi.com/v1/latest?apikey=iMsPqn3Rhbamaq9BxTP0Wh6g7ENnwPd9Khxl1hSH&currencies=EUR%2CUSD%2CGBP%2CRUB&base_currency=TRY")
+    let url2 = URL(string: "https://api.freecurrencyapi.com/v1/latest?apikey=iMsPqn3Rhbamaq9BxTP0Wh6g7ENnwPd9Khxl1hSH&currencies=&base_currency=TRY")
+    let url = URL(string: "https://api.freecurrencyapi.com/v1/latest?apikey=iMsPqn3Rhbamaq9BxTP0Wh6g7ENnwPd9Khxl1hSH&currencies=EUR%2CUSD%2CGBP%2CRUB%2CJPY%2CCAD%2CPHP%2CPLN&base_currency=TRY")
     
-    func getCurrencyData() {
-        
+    func getFullApi() {
         networkService.getData(url: url!) { result in
             switch result{
             case .success(let data):
                 do {
                     let currency = try JSONDecoder().decode(Currency.self, from: data)
-                    self.output?.updateCurrencyLabels(eur: currency.data.eur, gbp: currency.data.gbp, rub: currency.data.rub, usd: currency.data.usd, isSucces: true)
+                    let keys : [String] = Array(currency.data.keys)
+                    let values : [Double] = Array(currency.data.values)
+                    self.output?.updateCurrencyLabels(keys: self.grouppedKeys(array: keys), values: self.grouppedValues(array: values), isSucces: true)
                 } catch {
-                    self.output?.updateCurrencyLabels(eur: 0, gbp: 0, rub: 0, usd: 0, isSucces: false)
+                    self.output?.updateCurrencyLabels(keys: [[]], values: [[]], isSucces: false)
                 }
             case .failure(let error):
-                print(error.localizedDescription)
-                self.output?.updateCurrencyLabels(eur: 0, gbp: 0, rub: 0, usd: 0, isSucces: false)
+                print(error)
             }
         }
     }
-
+    
+    func grouppedKeys(array : [String]) -> [[String]]{
+        var groupedArray = [[String]]()
+        for i in stride(from: 0, to: array.count, by: 4) {
+            var group = [String]()
+            for j in i..<(i + 4) {
+                if j < array.count {
+                    group.append(array[j])
+                }
+            }
+            groupedArray.append(group)
+        }
+        return groupedArray
+    }
+    
+    func grouppedValues(array : [Double]) -> [[Double]]{
+        var groupedArray = [[Double]]()
+        for i in stride(from: 0, to: array.count, by: 4) {
+            var group = [Double]()
+            for j in i..<(i + 4) {
+                if j < array.count {
+                    group.append(array[j])
+                }
+            }
+            groupedArray.append(group)
+        }
+        return groupedArray
+    }
+    
     func convertPortfolio(){
-        
-        networkService.getData(url: url!) { result in
-            switch result{
-            case .success(let data):
-                do {
-                    let currency = try JSONDecoder().decode(Currency.self, from: data)
-                    self.currenciesArray.append((currency.data.eur, currency.data.gbp, currency.data.rub, currency.data.usd))
-                    self.cdService.getPortfolio { result in
-                        switch result{
-                        case .success(let portfolio):
-                            self.output?.convertTL(eur: portfolio.eur / self.currenciesArray[0].eur,
-                                                   gbp: portfolio.gbp / self.currenciesArray[0].gbp,
-                                                   rub: portfolio.rub / self.currenciesArray[0].rub,
-                                                   usd: portfolio.usd / self.currenciesArray[0].usd)
-                        case .failure(let error):
-                            print(error.localizedDescription)
-                            self.output?.convertTL(eur: 0, gbp: 0, rub: 0, usd: 0)
-                        }
-                    }
-                } catch {
-                    self.currenciesArray.append((1,1,1,1))
-                }
-            case .failure(let error):
-                print(error.localizedDescription)
-                self.output?.updateCurrencyLabels(eur: 0, gbp: 0, rub: 0, usd: 0, isSucces: false)
-            }
-        }
-    }
-    
-    func updateChart(){
+        var collectionArray : [collectionPortfolio] = [collectionPortfolio]()
         
         networkService.getData(url: url!) { result in
             switch result {
             case .success(let data):
                 do {
                     let currency = try JSONDecoder().decode(Currency.self, from: data)
-                    self.calculatePercent(eur: 1 / currency.data.eur, gbp: 1 / currency.data.gbp , rub: 1 / currency.data.rub, usd: 1 / currency.data.usd)
+                    self.cdService.getPortfolio { result in
+                        switch result {
+                        case .success(let portfolios):
+                            for port in portfolios{
+                                collectionArray.append(collectionPortfolio(name: port.name, price: port.value, priceTL: port.value / (currency.data[port.name] ?? 1)))
+                            }
+                            
+                            collectionArray.removeAll { $0.price == 0.0 }
+                            
+                            self.output?.fillPortfolio(collectionArray: collectionArray)
+                        case .failure(let error):
+                            print(error.localizedDescription)
+                        }
+                    }
                 } catch {
-                    self.calculatePercent(eur: 1, gbp: 1, rub: 1, usd: 1)
+                    self.output?.updateCurrencyLabels(keys: [[]], values: [[]], isSucces: false)
                 }
             case .failure(let error):
-                print(error.localizedDescription)
+                print(error)
             }
         }
     }
     
-    func calculatePercent(eur : Double,gbp : Double ,rub : Double,usd : Double) {
-        var total = 0.0
-        print(eur)
-        cdService.getPortfolio { result in
-                    switch result {
-                    case .success(let portfolio):
-                        self.eur = portfolio.eur * eur
-                        self.gbp = portfolio.gbp * gbp
-                        self.rub = portfolio.rub * rub
-                        self.usd = portfolio.usd * usd
-                        
-                        total = self.eur + self.gbp + self.rub + self.usd
-                        
-                        if total > 0 {
-                            self.eur = self.eur  * 100 / total
-                            self.gbp = self.gbp  * 100 / total
-                            self.rub = self.rub  * 100 / total
-                            self.usd = self.usd  * 100 / total
-                        } else {
-                            self.eur = 0
-                            self.gbp = 0
-                            self.rub = 0
-                            self.usd = 0
-                        }
-                        
-                        self.output?.updatePiechart(eur: self.eur, gbp: self.gbp, rub: self.rub, usd: self.usd)
-                        
-                    case .failure(let error):
-                        print(error.localizedDescription)
-                    }
-                }
+    // MARK: - ChartSet
+    func updateChart(){
         
+     var collectionArray : [collectionPortfolio] = [collectionPortfolio]()
+     
+     networkService.getData(url: url!) { result in
+         switch result {
+         case .success(let data):
+             do {
+                 let currency = try JSONDecoder().decode(Currency.self, from: data)
+                 self.cdService.getPortfolio { result in
+                     switch result {
+                     case .success(let portfolios):
+                         for port in portfolios{
+                             collectionArray.append(collectionPortfolio(name: port.name, price: port.value, priceTL: port.value / (currency.data[port.name] ?? 1)))
+                         }
+                         
+                         collectionArray.removeAll { $0.price == 0.0 }
+                         
+                         self.calculatePercent(collectinArray: collectionArray)
+                     case .failure(let error):
+                         print(error.localizedDescription)
+                     }
+                 }
+             } catch {
+                 self.output?.updateCurrencyLabels(keys: [[]], values: [[]], isSucces: false)
+             }
+         case .failure(let error):
+             print(error)
+         }
+     }
+    }
+    
+    func calculatePercent(collectinArray : [collectionPortfolio] ) {
+        var total = 0.0
+        var percentArray : [String : Double] = [:]
+        for array in collectinArray {
+            total += array.priceTL
+        }
+        
+        for array in collectinArray {
+            percentArray[array.name] = array.price * 100 / total
+        }
+        
+        self.createPieChart(percentArray: percentArray)
+        
+    }
+    
+    
+    func createPieChart(percentArray : [String : Double]){
+        
+        DispatchQueue.main.async {
+            let view = UIView()
+            let pieChartView = PieChartView(frame: CGRect(x: 0, y: 0, width: view.frame.width, height: view.frame.height))
+
+            var entryPortfolios = [ChartDataEntry]()
+            
+            for array in percentArray{
+                let entry = PieChartDataEntry(value: array.value, label: array.key)
+                entryPortfolios.append(entry)
+            }
+            
+            let dataSet = PieChartDataSet(entries: entryPortfolios)
+                
+            dataSet.colors = ChartColorTemplates.colorful()
+
+            let data = PieChartData(dataSet: dataSet)
+            pieChartView.data = data
+        
+            let formatter = NumberFormatter()
+            formatter.numberStyle = .percent
+            formatter.maximumFractionDigits = 2
+            formatter.multiplier = 1
+            formatter.percentSymbol = "%"
+                
+            let setFormatter = DefaultValueFormatter(formatter: formatter)
+            data.setValueFormatter(setFormatter)
+            
+            pieChartView.legend.enabled = false
+            pieChartView.drawHoleEnabled = false
+            pieChartView.isUserInteractionEnabled = false
+            pieChartView.rotationAngle = 0
+            
+            pieChartView.frame = view.frame
+            pieChartView.center = view.center
+            view.addSubview(pieChartView)
+            self.output?.updatePiechart(view: view)
+        }
     }
 }

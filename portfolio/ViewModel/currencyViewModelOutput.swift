@@ -7,9 +7,10 @@
 
 import Foundation
 import Charts
+import UIKit
 
 protocol currencyViewModelOutput : AnyObject{
-    func updateCurrencyLabels(eur : Double, gbp: Double, rub : Double, usd : Double, isSucces: Bool)
-    func convertTL(eur : Double, gbp : Double, rub : Double, usd : Double)
-    func updatePiechart(eur : Double, gbp : Double, rub : Double, usd : Double)
+    func updateCurrencyLabels(keys : [[String]], values : [[Double]], isSucces: Bool)
+    func fillPortfolio(collectionArray : [collectionPortfolio])
+    func updatePiechart(view : UIView)
 }

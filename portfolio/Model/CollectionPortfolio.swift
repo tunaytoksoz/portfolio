@@ -11,5 +11,4 @@ struct collectionPortfolio : Codable, Hashable {
     let name : String
     let price : Double
     let priceTL : Double
-    let portfolio : [Portfolio]
 }

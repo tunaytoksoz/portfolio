@@ -85,11 +85,11 @@ class PortfolioCell: UICollectionViewCell, SelfConfiguringCell {
         
     }
     
-    public func configure(name : String, symbol: String , price : Double, priceTL : Double){
+    public func configure(collectionPortfolio : collectionPortfolio){
         DispatchQueue.main.async {
-            self.Namelabel.text! = name
-            self.PriceLabel.text! = "\(price) \(symbol)"
-            self.PriceTLlabel.text! = "\(priceTL) ₺"
+            self.Namelabel.text! = collectionPortfolio.name
+            self.PriceLabel.text! = String(format: "%.2f", collectionPortfolio.price)
+            self.PriceTLlabel.text! = String(format: "%.2f ₺", collectionPortfolio.priceTL)
         }
     }
 }

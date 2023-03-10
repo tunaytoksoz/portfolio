@@ -29,7 +29,7 @@ final class cdViewModelTests: XCTestCase {
     
     func testUpdateView_WhenGetCoredataSucces_ShowPortfolio() throws {
         
-        let mockPortfolio = Portfolio(eur: 15, gbp: 49, rub: 4, usd: 50)
+        let mockPortfolio = portfolio(eur: 15, gbp: 49, rub: 4, usd: 50)
         
         cdServiceProtocol.getportfolioMockResult = .success(mockPortfolio)
         
@@ -44,7 +44,7 @@ final class cdViewModelTests: XCTestCase {
     }
     
     func testSavePortfolio_isSucces() throws{
-        let mockPortfolio = Portfolio(eur: 15, gbp: 49, rub: 4, usd: 50)
+        let mockPortfolio = portfolio(eur: 15, gbp: 49, rub: 4, usd: 50)
         
         cdServiceProtocol.savePortfolioMockResult = .success(true)
         
@@ -56,7 +56,7 @@ final class cdViewModelTests: XCTestCase {
     
     
     func testPercentCalculate_Succes() throws {
-        let mockPortfolio = Portfolio(eur: 5, gbp: 15, rub: 15, usd: 15)
+        let mockPortfolio = portfolio(eur: 5, gbp: 15, rub: 15, usd: 15)
         
         cdServiceProtocol.getportfolioMockResult = .success(mockPortfolio)
         
@@ -79,16 +79,16 @@ final class cdViewModelTests: XCTestCase {
 
 class MockCoreDataService : CoreDataServiceProtocol {
     
-    var getportfolioMockResult : Result<portfolio.Portfolio, Error>?
+    var getportfolioMockResult : Result<portfolio.portfolio, Error>?
     var savePortfolioMockResult : Result<Bool, Error>?
     
-    func savePortfolio(portfolio: portfolio.Portfolio, completion: @escaping (Result<Bool, Error>) -> Void) {
+    func savePortfolio(portfolio: portfolio.portfolio, completion: @escaping (Result<Bool, Error>) -> Void) {
         if let result = savePortfolioMockResult {
             completion(result)
         }
     }
     
-    func getPortfolio(completion: @escaping (Result<portfolio.Portfolio, Error>) -> Void) {
+    func getPortfolio(completion: @escaping (Result<portfolio.portfolio, Error>) -> Void) {
         if let result = getportfolioMockResult {
             completion(result)
         }

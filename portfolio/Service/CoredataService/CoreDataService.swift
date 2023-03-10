@@ -10,12 +10,12 @@ import CoreData
 import UIKit
 
 protocol CoreDataServiceProtocol {
-    func savePortfolio(portfolio : Portfolio, completion: @escaping (Result<Bool,Error>) -> Void)
-    func getPortfolio(completion:  @escaping (Result<Portfolio,Error>) -> Void)
+    func savePortfolio(portfolio : portfolio, completion: @escaping (Result<Bool,Error>) -> Void)
+    func getPortfolio(completion:  @escaping (Result<[portfolio],Error>) -> Void)
 }
 
 class CoreDataService : CoreDataServiceProtocol {
-    
+ 
     let appDelegate = UIApplication.shared.delegate as! AppDelegate
 
     
@@ -40,17 +40,16 @@ class CoreDataService : CoreDataServiceProtocol {
     }
          
 
-    func savePortfolio(portfolio : Portfolio, completion: @escaping (Result<Bool,Error>) -> Void){
+    func savePortfolio(portfolio : portfolio, completion: @escaping (Result<Bool,Error>) -> Void){
         
         let context = appDelegate.persistentContainer.viewContext
         
-        let curr = Currencies(context: context)
-        curr.eur = portfolio.eur
-        curr.gbp = portfolio.gbp
-        curr.rub = portfolio.rub
-        curr.usd = portfolio.usd
-        curr.createdTimeString = getDate()
-        curr.createdTime = Date()
+        let port = MyPortfolio(context: context)
+        port.name = portfolio.name
+        port.value = portfolio.value
+        port.createdTime = Date()
+        port.createdTimeStr = getDate()
+    
         
         do {
             try context.save()
@@ -62,37 +61,47 @@ class CoreDataService : CoreDataServiceProtocol {
     }
     
     
-    func getPortfolio(completion:  @escaping (Result<Portfolio,Error>) -> Void){
+    func getPortfolio(completion:  @escaping (Result<[portfolio],Error>) -> Void){
         
         let context = appDelegate.persistentContainer.viewContext
           
-        let fetchRequest : NSFetchRequest<Currencies> = Currencies.fetchRequest()
+        let fetchRequest : NSFetchRequest<MyPortfolio> = MyPortfolio.fetchRequest()
         
-        /**
-         fetchRequest.predicate = NSPredicate(
-             format: "eur LIKE %@", "\(Double(1))"
-         )
-         
-         */
-        var port = Portfolio(eur: 0, gbp: 0, rub: 0, usd: 0)
+        var portArray : [portfolio] = [portfolio]()
+        
+        var nameTotals : [String : Double] = [:]
         
         do {
-            let currencies = try context.fetch(fetchRequest )
+            let portfolios = try context.fetch(fetchRequest)
             
-            for curr in currencies {
-                port.eur += curr.eur
-                port.gbp += curr.gbp
-                port.rub += curr.rub
-                port.usd += curr.usd
-                // port.createdTime = currencies.last?.createdTime
+            for port in portfolios {
+                if let name = port.name, let amount = port.value as? Double {
+                           if let currentTotal = nameTotals[name] {
+                               nameTotals[name] = currentTotal + amount
+                           } else {
+                               nameTotals[name] = amount
+                           }
+                       }
             }
             
-            completion(.success(port))
+            for (name, total) in nameTotals {
+                portArray.append(portfolio(name: name, value: total))
+            }
+            
+            completion(.success(portArray))
             
         } catch let error as NSError {
             print(error.localizedDescription)
             completion(.failure(error))
         }
+        
+        /**
+         fetchRequest.predicate = NSPredicate(
+             format: "eur LIKE %@", "\(Double(1))"
+         )
+
+         */
+        
     }
     
     

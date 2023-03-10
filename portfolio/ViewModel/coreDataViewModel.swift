@@ -21,7 +21,7 @@ class coreDataViewModel {
     
     var retBool = false
     
-    func saveObject(portfolio : Portfolio) -> Bool{
+    func saveObject(portfolio : portfolio) -> Bool{
         cdServiceProtocol.savePortfolio(portfolio: portfolio) { result in
             switch result {
             case .success(true):
@@ -40,10 +40,9 @@ class coreDataViewModel {
         cdServiceProtocol.getPortfolio { result in
             switch result{
             case .success(let portfolio):
-                self.cdOutput?.updatePortfolioLabels(eur: portfolio.eur, gbp: portfolio.gbp, rub: portfolio.rub, usd: portfolio.usd, isSucces: true)
+                print(portfolio)
             case .failure(let error):
                 print(error.localizedDescription)
-                self.cdOutput?.updatePortfolioLabels(eur: 0, gbp: 0, rub: 0, usd: 0, isSucces: false)
             }
         }
     }

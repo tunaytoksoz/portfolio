@@ -58,6 +58,12 @@ class CurrencyCell: UICollectionViewCell, SelfConfiguringCell {
         return label
     }()
     
+    private let activityIndicator : UIActivityIndicatorView = {
+        let ai = UIActivityIndicatorView(style: .large)
+        return ai
+    }()
+   
+    
     func setupUI(){
         
         backgroundColor = .darkGray
@@ -68,6 +74,7 @@ class CurrencyCell: UICollectionViewCell, SelfConfiguringCell {
         addSubview(gbpLabel)
         addSubview(rubLabel)
         addSubview(usdLabel)
+        addSubview(activityIndicator)
         
         eurLabel.translatesAutoresizingMaskIntoConstraints = false
         gbpLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -89,12 +96,19 @@ class CurrencyCell: UICollectionViewCell, SelfConfiguringCell {
         ])
     }
     
-    public func configure(currency : Currency){
-        DispatchQueue.main.async {
-            self.eurLabel.text! = "EUR: \(currency.data.eur.formatted())"
-            self.gbpLabel.text! = "GBP: \(currency.data.gbp.formatted())"
-            self.rubLabel.text! = "RUB: \(currency.data.rub.formatted())"
-            self.usdLabel.text! = "USD: \(currency.data.usd.formatted())"
+    public func configure(key : [String], value : [Double], isSucces: Bool){
+        DispatchQueue.main.async { [self] in
+            if isSucces {
+                self.activityIndicator.stopAnimating()
+                self.eurLabel.text! = String(format: "\(key[0]): %.3f",  1 / value[0])
+                self.gbpLabel.text! = String(format: "\(key[1]): %.3f",  1 / value[1])
+                self.rubLabel.text! = String(format: "\(key[2]): %.3f",  1 / value[2])
+                self.usdLabel.text! = String(format: "\(key[3]): %.3f",  1 / value[3])
+            } else {
+                self.activityIndicator.center = center
+                self.activityIndicator.tintColor = .link
+                self.activityIndicator.startAnimating()
+            }
         }
     }
     
