@@ -12,4 +12,5 @@ struct portfolio : Codable, Hashable {
     var value : Double
     var createdTime : Date?
     var createdTimeString : String?
+    var totalValue : Double?
 }

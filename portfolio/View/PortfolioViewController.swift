@@ -21,9 +21,8 @@ class PortfolioViewController: UIViewController, UICollectionViewDelegate, UICol
     var chartArray : [UIView] = [UIView]()
     
     var keys : [[String]] = [[String]]()
-    
     var values : [[Double]] = [[Double]]()
-    
+    var currencies : [String : Double] = [:]
     init(currencyViewModel: currencyViewModel, cdViewModel: coreDataViewModel) {
         self.currencyViewModel = currencyViewModel
         self.cdViewModel = cdViewModel
@@ -48,11 +47,15 @@ class PortfolioViewController: UIViewController, UICollectionViewDelegate, UICol
         
         title = "Portfolio App"
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(didTapAdd))
-        
-        currencyViewModel.getFullApi()
+        //cdViewModel.getDailyPortfolio()
+        currencyViewModel.getCurrency()
         currencyViewModel.convertPortfolio()
         currencyViewModel.updateChart() // piechart
         
+        
+        print(FileManager.default.urls(for: .documentDirectory, in: .userDomainMask))
+        
+       
         collectionView.delegate = self
         collectionView.dataSource = self
         
@@ -67,14 +70,15 @@ class PortfolioViewController: UIViewController, UICollectionViewDelegate, UICol
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let name = portfolioArray[indexPath.item].name
-        let price = portfolioArray[indexPath.item].price
         
         if indexPath.section == 2 {
+            let name = portfolioArray[indexPath.item].name
+            let price = portfolioArray[indexPath.item].price
+            
             AlertManager().showInputAlert(on: self, title: "\(name) Sat", subtitle: "Lütfen Miktar Girin", actionTitle: "Sat", actionHandler:  { text in
                 guard let text = Double(text ?? "0") else { return }
                 if text <= price {
-                    let succes = self.cdViewModel.saveObject(portfolio: portfolio(name: name, value: -text))
+                    let succes = self.cdViewModel.saveObject(portfolio: portfolio(name: name, value: -text), curr: self.currencies[name] ?? 1)
                     if succes {
                         AlertManager().showBasicAlert(on: self, title: "Başarılı", message: "Satıldı.", prefer: .alert)
                         self.currencyViewModel.convertPortfolio()
@@ -94,7 +98,11 @@ class PortfolioViewController: UIViewController, UICollectionViewDelegate, UICol
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CurrencyCell.reuseIdentifier, for: indexPath) as? CurrencyCell else {
                 return UICollectionViewCell()
             }
-            cell.configure(key: keys[indexPath.item], value: values[indexPath.item], isSucces: true)
+            if keys.first?.count == 0 {
+                cell.configure(key: keys[indexPath.item], value: values[indexPath.item], isSucces: false)
+            } else {
+                cell.configure(key: keys[indexPath.item], value: values[indexPath.item], isSucces: true)
+            }
             return cell
         case 1:
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ChartCell.reuseIdentifier, for: indexPath) as? ChartCell else {
@@ -128,13 +136,17 @@ class PortfolioViewController: UIViewController, UICollectionViewDelegate, UICol
 extension PortfolioViewController : currencyViewModelOutput, cdViewModelOutput{
     
     
-    func updateCurrencyLabels(keys: [[String]], values: [[Double]], isSucces: Bool) {
+    func updateCurrencyLabels(keys: [[String]], values: [[Double]], currencies: [String : Double], isSucces: Bool) {
         DispatchQueue.main.async {
             self.keys = keys
             self.values = values
+            self.currencies = currencies
             self.collectionView.reloadData()
         }
     }
+    
+    
+   
     
     func updatePiechart(view: UIView) {
         DispatchQueue.main.async {
@@ -143,11 +155,6 @@ extension PortfolioViewController : currencyViewModelOutput, cdViewModelOutput{
             self.collectionView.reloadData()
         }
     }
-
-    
-    func updateCurrencyLabels(eur: Double, gbp: Double, rub: Double, usd: Double, isSucces: Bool) {
-        
-    }
     
     func fillPortfolio(collectionArray: [collectionPortfolio]) {
         DispatchQueue.main.async {
@@ -155,11 +162,7 @@ extension PortfolioViewController : currencyViewModelOutput, cdViewModelOutput{
             self.collectionView.reloadData()
         }
     }
-    
-    
 
-    
-    
     @objc func didTapAdd(){
         AlertManager().showActionSheet(on: self, currency: keys, actionHandler:  { text in
             guard let name = text else { return }
@@ -167,7 +170,8 @@ extension PortfolioViewController : currencyViewModelOutput, cdViewModelOutput{
             AlertManager().showInputAlert(on: self, title: "\(name) Al", subtitle: "", actionTitle: "Al", actionHandler:  { text in
                 
                 guard let text = Double(text ?? "0") else { return }
-                let succes = self.cdViewModel.saveObject(portfolio: portfolio(name: name, value: text))
+                let succes = self.cdViewModel.saveObject(portfolio: portfolio(name: name, value: text), curr: self.currencies[name] ?? 1)
+                
                 if succes {
                     AlertManager().showBasicAlert(on: self, title: "Başarılı", message: "Satın Alınan Döviz Portföyünüze Eklendi.", prefer: .alert)
                     self.currencyViewModel.convertPortfolio()

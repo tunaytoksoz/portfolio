@@ -98,7 +98,7 @@ class CurrencyCell: UICollectionViewCell, SelfConfiguringCell {
     
     public func configure(key : [String], value : [Double], isSucces: Bool){
         DispatchQueue.main.async { [self] in
-            if isSucces {
+            if isSucces == true {
                 self.activityIndicator.stopAnimating()
                 self.topLeftLabel.text! = String(format: "\(key[0]): %.3f",  1 / value[0])
                 self.topRightLabel.text! = String(format: "\(key[1]): %.3f",  1 / value[1])
@@ -106,7 +106,7 @@ class CurrencyCell: UICollectionViewCell, SelfConfiguringCell {
                 self.bottomRight.text! = String(format: "\(key[3]): %.3f",  1 / value[3])
             } else {
                 self.activityIndicator.center = center
-                self.activityIndicator.tintColor = .link
+                self.activityIndicator.color = .white
                 self.activityIndicator.startAnimating()
             }
         }

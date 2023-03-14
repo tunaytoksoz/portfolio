@@ -16,10 +16,9 @@ class currencyViewModel {
     
     weak var output : currencyViewModelOutput?
     
-    private var collectionArray : [collectionPortfolio] = []
+    private var baseUrl = "https://api.freecurrencyapi.com/v1/"
     
-    private var keys : [String] = [String]()
-    private var values : [Double] = [Double]()
+    private var collectionArray : [collectionPortfolio] = []
     
     init(networkService: NetworkServiceProtocol, cdService: CoreDataServiceProtocol, output: currencyViewModelOutput? = nil) {
         self.networkService = networkService
@@ -29,23 +28,61 @@ class currencyViewModel {
     
     private var currencyData : Currency?
     
-    let url2 = URL(string: "https://api.freecurrencyapi.com/v1/latest?apikey=iMsPqn3Rhbamaq9BxTP0Wh6g7ENnwPd9Khxl1hSH&currencies=&base_currency=TRY")
-    let url = URL(string: "https://api.freecurrencyapi.com/v1/latest?apikey=iMsPqn3Rhbamaq9BxTP0Wh6g7ENnwPd9Khxl1hSH&currencies=EUR%2CUSD%2CGBP%2CRUB%2CJPY%2CCAD%2CPHP%2CPLN&base_currency=TRY")
-    
-    func getFullApi() {
-        networkService.getData(url: url!) { result in
-            switch result{
-            case .success(let data):
-                do {
-                    let currency = try JSONDecoder().decode(Currency.self, from: data)
-                    let keys : [String] = Array(currency.data.keys)
-                    let values : [Double] = Array(currency.data.values)
-                    self.output?.updateCurrencyLabels(keys: self.grouppedKeys(array: keys), values: self.grouppedValues(array: values), isSucces: true)
-                } catch {
-                    self.output?.updateCurrencyLabels(keys: [[]], values: [[]], isSucces: false)
+    // MARK: - Currency Get
+    func getCurrency() {
+        if let url = URL(string: baseUrl + "latest?apikey=iMsPqn3Rhbamaq9BxTP0Wh6g7ENnwPd9Khxl1hSH&currencies=EUR%2CUSD%2CGBP%2CRUB%2CJPY%2CCAD%2CPHP%2CPLN&base_currency=TRY"){
+            networkService.getData(url: url) { result in
+                switch result{
+                case .success(let data):
+                    do {
+                        let currency = try JSONDecoder().decode(Currency.self, from: data)
+                        let keys : [String] = Array(currency.data.keys)
+                        let values : [Double] = Array(currency.data.values)
+                        let currencies = currency.data
+                        
+                        let groupKeys = self.grouppedKeys(array: keys)
+                        let groupValues = self.grouppedValues(array: values)
+                        
+                        if keys.count % 4 == 0 && values.count % 4 == 0 {
+                            self.output?.updateCurrencyLabels(keys: groupKeys, values: groupValues, currencies: currencies, isSucces: true)
+                        } else {
+                            self.output?.updateCurrencyLabels(keys: [], values: [], currencies: currencies, isSucces: false)
+                        }
+            
+                    } catch {
+                        self.output?.updateCurrencyLabels(keys: [], values: [], currencies: [:], isSucces: false)
+                    }
+                case .failure(let error):
+                    print(error)
                 }
-            case .failure(let error):
-                print(error)
+            }
+        }
+    }
+    
+    func getCurrencyLast7days() {
+        
+        let firstDate = DateManager().getDate(dayNumber: 7)
+        let lastDate = DateManager().getDate(dayNumber: 1)
+        
+        if let url = URL(string: baseUrl + "historical?apikey=iMsPqn3Rhbamaq9BxTP0Wh6g7ENnwPd9Khxl1hSH&currencies=JPY%2CEUR%2CCAD%2CPLN%2CPHP%2CUSD%2CGBP%2CRUB&base_currency=TRY&date_from=\(firstDate)T09%3A52%3A06.742Z&date_to=\(lastDate)T09%3A52%3A06.743Z"){
+            networkService.getData(url: url) { result in
+                switch result {
+                case .success(let data):
+                    do {
+                        let currency = try JSONDecoder().decode(CurrencyWithHistory.self, from: data)
+                       
+                        let keys : [String] = Array(currency.data.keys)
+                        
+                        let values : [[String : Double]] = Array(currency.data.values)
+                        
+                       // self.getDailyPortfolio(keys: keys, values: values)
+                        
+                    } catch{
+                        
+                    }
+                case .failure(let error):
+                    print(error.localizedDescription)
+                }
             }
         }
     }
@@ -77,69 +114,84 @@ class currencyViewModel {
         }
         return groupedArray
     }
-    
+    // MARK: - Currency * Portfolio
     func convertPortfolio(){
-        var collectionArray : [collectionPortfolio] = [collectionPortfolio]()
         
-        networkService.getData(url: url!) { result in
-            switch result {
-            case .success(let data):
-                do {
-                    let currency = try JSONDecoder().decode(Currency.self, from: data)
-                    self.cdService.getPortfolio { result in
-                        switch result {
-                        case .success(let portfolios):
-                            for port in portfolios{
-                                collectionArray.append(collectionPortfolio(name: port.name, price: port.value, priceTL: port.value / (currency.data[port.name] ?? 1)))
+        var collectionArray : [collectionPortfolio] = [collectionPortfolio]()
+        var total : Double = 0
+        if let url = URL(string: baseUrl + "latest?apikey=iMsPqn3Rhbamaq9BxTP0Wh6g7ENnwPd9Khxl1hSH&currencies=EUR%2CUSD%2CGBP%2CRUB%2CJPY%2CCAD%2CPHP%2CPLN&base_currency=TRY"){
+            networkService.getData(url: url) { result in
+                switch result {
+                case .success(let data):
+                    do {
+                        let currency = try JSONDecoder().decode(Currency.self, from: data)
+                        self.cdService.getPortfolio { result in
+                            switch result {
+                            case .success(let portfolios):
+                                for port in portfolios{
+                                    collectionArray.append(collectionPortfolio(name: port.name, price: port.value, priceTL: port.value / (currency.data[port.name] ?? 1)))
+                                }
+                                collectionArray.removeAll { $0.price == 0.0 }
+                                
+                                for array in collectionArray {
+                                    total += array.priceTL
+                                }
+                                UserDefaults.standard.set(total, forKey: "totalValue")
+                                UserDefaults.standard.synchronize()
+                                self.cdService.saveDailyTable(totalValue: total)
+                                self.output?.fillPortfolio(collectionArray: collectionArray)
+                                
+                            case .failure(let error):
+                                print(error.localizedDescription)
                             }
-                            
-                            collectionArray.removeAll { $0.price == 0.0 }
-                            
-                            self.output?.fillPortfolio(collectionArray: collectionArray)
-                        case .failure(let error):
-                            print(error.localizedDescription)
                         }
+                    } catch {
+                        self.output?.updateCurrencyLabels(keys: [[]], values: [[]], currencies: [:], isSucces: false)
                     }
-                } catch {
-                    self.output?.updateCurrencyLabels(keys: [[]], values: [[]], isSucces: false)
+                case .failure(let error):
+                    print(error)
                 }
-            case .failure(let error):
-                print(error)
             }
         }
     }
     
+    
+    
+    
+    
     // MARK: - ChartSet
     func updateChart(){
         
-     var collectionArray : [collectionPortfolio] = [collectionPortfolio]()
+        var collectionArray : [collectionPortfolio] = [collectionPortfolio]()
      
-     networkService.getData(url: url!) { result in
-         switch result {
-         case .success(let data):
-             do {
-                 let currency = try JSONDecoder().decode(Currency.self, from: data)
-                 self.cdService.getPortfolio { result in
-                     switch result {
-                     case .success(let portfolios):
-                         for port in portfolios{
-                             collectionArray.append(collectionPortfolio(name: port.name, price: port.value, priceTL: port.value / (currency.data[port.name] ?? 1)))
-                         }
-                         
-                         collectionArray.removeAll { $0.price == 0.0 }
-                         
-                         self.calculatePercent(collectinArray: collectionArray)
-                     case .failure(let error):
-                         print(error.localizedDescription)
-                     }
-                 }
-             } catch {
-                 self.output?.updateCurrencyLabels(keys: [[]], values: [[]], isSucces: false)
-             }
-         case .failure(let error):
-             print(error)
-         }
-     }
+        if let url = URL(string: baseUrl + "latest?apikey=iMsPqn3Rhbamaq9BxTP0Wh6g7ENnwPd9Khxl1hSH&currencies=EUR%2CUSD%2CGBP%2CRUB%2CJPY%2CCAD%2CPHP%2CPLN&base_currency=TRY"){
+            networkService.getData(url: url) { result in
+                switch result {
+                case .success(let data):
+                    do {
+                        let currency = try JSONDecoder().decode(Currency.self, from: data)
+                        self.cdService.getPortfolio { result in
+                            switch result {
+                            case .success(let portfolios):
+                                for port in portfolios{
+                                    collectionArray.append(collectionPortfolio(name: port.name, price: port.value, priceTL: port.value / (currency.data[port.name] ?? 1)))
+                                }
+                                
+                                collectionArray.removeAll { $0.price == 0.0 }
+                                
+                                self.calculatePercent(collectinArray: collectionArray)
+                            case .failure(let error):
+                                print(error.localizedDescription)
+                            }
+                        }
+                    } catch {
+                        self.output?.updateCurrencyLabels(keys: [[]], values: [[]], currencies: [:], isSucces: false)
+                    }
+                case .failure(let error):
+                    print(error)
+                }
+            }
+        }
     }
     
     func calculatePercent(collectinArray : [collectionPortfolio] ) {
@@ -194,6 +246,7 @@ class currencyViewModel {
             
             pieChartView.frame = view.frame
             pieChartView.center = view.center
+            pieChartView.backgroundColor = .white
             view.addSubview(pieChartView)
             self.output?.updatePiechart(view: view)
         }

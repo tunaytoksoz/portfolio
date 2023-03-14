@@ -21,7 +21,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let networkService : NetworkServiceProtocol = NetworkService()
         let cdService = CoreDataService()
         let currencyViewModel = currencyViewModel(networkService: networkService, cdService: cdService)
-        let cdViewModel = coreDataViewModel(cdServiceProtocol: cdService)
+        let cdViewModel = coreDataViewModel(cdServiceProtocol: cdService, networkServiceProtocol: networkService)
         window.rootViewController = UINavigationController(rootViewController: PortfolioViewController(currencyViewModel: currencyViewModel, cdViewModel: cdViewModel))
         self.window = window
         self.window?.makeKeyAndVisible()

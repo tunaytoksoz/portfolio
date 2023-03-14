@@ -32,6 +32,8 @@
 		667CA61529B931DC00311D24 /* CurrencyCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 667CA61429B931DC00311D24 /* CurrencyCell.swift */; };
 		667CA61929BA9B8500311D24 /* Portfolios.swift in Sources */ = {isa = PBXBuildFile; fileRef = 667CA61829BA9B8500311D24 /* Portfolios.swift */; };
 		667CA62029BB351600311D24 /* portfolio.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 667CA61E29BB351600311D24 /* portfolio.xcdatamodeld */; };
+		667CA62229BF2A7C00311D24 /* DateManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 667CA62129BF2A7C00311D24 /* DateManager.swift */; };
+		667CA62429BF49FE00311D24 /* DailyPortfolio.swift in Sources */ = {isa = PBXBuildFile; fileRef = 667CA62329BF49FE00311D24 /* DailyPortfolio.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -80,6 +82,8 @@
 		667CA61429B931DC00311D24 /* CurrencyCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyCell.swift; sourceTree = "<group>"; };
 		667CA61829BA9B8500311D24 /* Portfolios.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Portfolios.swift; sourceTree = "<group>"; };
 		667CA61F29BB351600311D24 /* portfolio.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = portfolio.xcdatamodel; sourceTree = "<group>"; };
+		667CA62129BF2A7C00311D24 /* DateManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateManager.swift; sourceTree = "<group>"; };
+		667CA62329BF49FE00311D24 /* DailyPortfolio.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyPortfolio.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -209,6 +213,7 @@
 				661B916F29ACBD2400648CB1 /* Currency.swift */,
 				66452A3329B7D3E90073067E /* CollectionPortfolio.swift */,
 				667CA61829BA9B8500311D24 /* Portfolios.swift */,
+				667CA62329BF49FE00311D24 /* DailyPortfolio.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -217,6 +222,7 @@
 			isa = PBXGroup;
 			children = (
 				66452A2C29B5D4600073067E /* AlertManager.swift */,
+				667CA62129BF2A7C00311D24 /* DateManager.swift */,
 			);
 			path = Support;
 			sourceTree = "<group>";
@@ -371,6 +377,7 @@
 				66452A3229B76DA30073067E /* PortfolioCell.swift in Sources */,
 				667CA61929BA9B8500311D24 /* Portfolios.swift in Sources */,
 				661B917029ACBD2400648CB1 /* Currency.swift in Sources */,
+				667CA62229BF2A7C00311D24 /* DateManager.swift in Sources */,
 				667CA61529B931DC00311D24 /* CurrencyCell.swift in Sources */,
 				66452A3029B75F810073067E /* PortfolioViewController.swift in Sources */,
 				66452A2D29B5D4600073067E /* AlertManager.swift in Sources */,
@@ -382,6 +389,7 @@
 				661B913629ACB0C900648CB1 /* AppDelegate.swift in Sources */,
 				661B918229AFC56D00648CB1 /* cdViewModelOutput.swift in Sources */,
 				66452A3429B7D3E90073067E /* CollectionPortfolio.swift in Sources */,
+				667CA62429BF49FE00311D24 /* DailyPortfolio.swift in Sources */,
 				661B913829ACB0C900648CB1 /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -11,29 +11,41 @@ import Charts
 class coreDataViewModel {
     
     private let cdServiceProtocol : CoreDataServiceProtocol
+    private let networkServiceProtocol : NetworkServiceProtocol
 
     weak var cdOutput : cdViewModelOutput?
     
-    init(cdServiceProtocol: CoreDataServiceProtocol, cdOutput: cdViewModelOutput? = nil) {
+    private var baseUrl = "https://api.freecurrencyapi.com/v1/"
+    
+    init(cdServiceProtocol: CoreDataServiceProtocol, networkServiceProtocol: NetworkServiceProtocol, cdOutput: cdViewModelOutput? = nil) {
         self.cdServiceProtocol = cdServiceProtocol
+        self.networkServiceProtocol = networkServiceProtocol
         self.cdOutput = cdOutput
     }
     
     var retBool = false
+    var ret = 0.0
+    func getCurrency(name : String) {
+        
+    }
     
-    func saveObject(portfolio : portfolio) -> Bool{
-        cdServiceProtocol.savePortfolio(portfolio: portfolio) { result in
+    func saveObject(portfolio : portfolio, curr : Double) -> Bool{
+        self.cdServiceProtocol.savePortfolio(portfolio: portfolio, curr: curr) { result in
             switch result {
             case .success(true):
                 self.retBool = true
-            case .failure(let error):
-                self.retBool = false
+                var total = UserDefaults.standard.object(forKey: "totalValue") as! Double
+                total += portfolio.value / curr
+                self.cdServiceProtocol.saveDailyTable(totalValue: total )
+            case.failure(let error):
                 print(error.localizedDescription)
+                self.retBool = false
             default:
                 self.retBool = false
             }
         }
         return retBool
+        
     }
 
     func getPortfolio() {
@@ -46,4 +58,20 @@ class coreDataViewModel {
             }
         }
     }
+    
+    /*
+     func getDailyPortfolio(){
+         let today = Date()
+         
+         cdServiceProtocol.getPortfolioWithDayFilter(date: Date().formatted(date: .numeric, time: .omitted)) { result in
+                 switch result{
+                 case .success(let portfolios):
+                     print(portfolios.first?.totalValue)
+                     print(portfolios)
+                 case .failure(let error):
+                     print(error.localizedDescription)
+                 }
+             }
+     }
+     **/
 }

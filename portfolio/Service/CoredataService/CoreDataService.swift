@@ -10,46 +10,69 @@ import CoreData
 import UIKit
 
 protocol CoreDataServiceProtocol {
-    func savePortfolio(portfolio : portfolio, completion: @escaping (Result<Bool,Error>) -> Void)
+    func savePortfolio(portfolio : portfolio, curr : Double, completion: @escaping (Result<Bool,Error>) -> Void)
     func getPortfolio(completion:  @escaping (Result<[portfolio],Error>) -> Void)
+    func saveDailyTable(totalValue : Double)
+ //   func getPortfolioWithDayFilter(date : String ,completion:  @escaping (Result<[DailyPortfolios],Error>) -> Void)
 }
 
 class CoreDataService : CoreDataServiceProtocol {
  
     let appDelegate = UIApplication.shared.delegate as! AppDelegate
-
     
-
-    func getDate() -> String{
-             
-             let dateFormatterGet = DateFormatter()
-             dateFormatterGet.dateFormat = "MM/dd/yyyy"
-
-             let dateFormatterPrint = DateFormatter()
-             dateFormatterPrint.dateFormat = "yyyy-MM-dd"
-
-             var now = Date().formatted(date: .numeric, time: .omitted)
-             
-             if let date = dateFormatterGet.date(from: "\(now)") {
-                 now = dateFormatterPrint.string(from: date)
-             } else {
-                print("There was an error decoding the string")
-             }
-             
-             return now
+    func saveDailyTable(totalValue : Double){
+        let tz = TimeZone.current
+        tz.localizedName(for: .generic, locale: .autoupdatingCurrent)
+        let contex = appDelegate.persistentContainer.viewContext
+        
+        let today = Date().formatted(date: .numeric, time: .omitted)
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "MM/dd/yyyy"
+        let queryDate = dateFormatter.date(from: today)!
+        let calendar = Calendar.current
+        let startOfDay = calendar.startOfDay(for: queryDate)
+        print(startOfDay)
+        let midnight = calendar.date(bySettingHour: 23, minute: 59, second: 59, of: startOfDay)!
+        
+        let fetchRequest : NSFetchRequest<DailyPortfolio> = DailyPortfolio.fetchRequest()
+        fetchRequest.predicate = NSPredicate(format: "day >= %@ AND day < %@", queryDate as NSDate, midnight as NSDate)
+        
+        do {
+            let response = try contex.fetch(fetchRequest)
+            if response.count > 0 {
+                response.first?.totalValue = totalValue
+                response.first?.day = Date()
+                try contex.save()
+            } else {
+                let dp = DailyPortfolio(context: contex)
+                dp.totalValue = totalValue
+                dp.day = Date()
+                try contex.save()
+            }
+        } catch {
+            
+        }
     }
-         
-
-    func savePortfolio(portfolio : portfolio, completion: @escaping (Result<Bool,Error>) -> Void){
+    
+    func savePortfolio(portfolio : portfolio, curr : Double, completion: @escaping (Result<Bool,Error>) -> Void){
         
         let context = appDelegate.persistentContainer.viewContext
         
-        let port = Portfolio(context: context)
-        port.name = portfolio.name
-        port.value = portfolio.value
-        port.createdTime = Date()
-        port.createdTimeStr = getDate()
-    
+        if let total = UserDefaults.standard.object(forKey: portfolio.name) as? Double{
+            let port = Portfolio(context: context)
+            port.name = portfolio.name
+            port.value = portfolio.value
+            port.createdTime = Date()
+            port.createdTimeStr = Date().formatted(date: .numeric, time: .standard)
+            port.totalValue = total + portfolio.value
+        } else {
+            let port = Portfolio(context: context)
+            port.name = portfolio.name
+            port.value = portfolio.value
+            port.createdTime = Date()
+            port.createdTimeStr = Date().formatted(date: .numeric, time: .standard)
+            port.totalValue = portfolio.value
+        }
         
         do {
             try context.save()
@@ -60,16 +83,12 @@ class CoreDataService : CoreDataServiceProtocol {
         }
     }
     
-    
     func getPortfolio(completion:  @escaping (Result<[portfolio],Error>) -> Void){
+        var portArray : [portfolio] = [portfolio]()
+        var nameTotals : [String : Double] = [:]
         
         let context = appDelegate.persistentContainer.viewContext
-          
         let fetchRequest : NSFetchRequest<Portfolio> = Portfolio.fetchRequest()
-        
-        var portArray : [portfolio] = [portfolio]()
-        
-        var nameTotals : [String : Double] = [:]
         
         do {
             let portfolios = try context.fetch(fetchRequest)
@@ -86,7 +105,9 @@ class CoreDataService : CoreDataServiceProtocol {
             
             for (name, total) in nameTotals {
                 portArray.append(portfolio(name: name, value: total))
+                UserDefaults.standard.setValue(total, forKey: name)
             }
+            UserDefaults.standard.synchronize()
             
             completion(.success(portArray))
             
@@ -94,15 +115,40 @@ class CoreDataService : CoreDataServiceProtocol {
             print(error.localizedDescription)
             completion(.failure(error))
         }
-        
-        /**
-         fetchRequest.predicate = NSPredicate(
-             format: "eur LIKE %@", "\(Double(1))"
-         )
-
-         */
-        
     }
     
-    
+        /*
+         func getPortfolioWithDayFilter(date : String ,completion:  @escaping (Result<[DailyPortfolios],Error>) -> Void){
+             
+             let context = appDelegate.persistentContainer.viewContext
+               
+             let fetchRequest : NSFetchRequest<DailyPortfolio> = DailyPortfolio.fetchRequest()
+             
+             var portArray : [DailyPortfolios] = [DailyPortfolios]()
+             
+             let dateFormatter = DateFormatter()
+             dateFormatter.dateFormat = "MM/dd/yyyy"
+             let queryDate = dateFormatter.date(from: date)!
+             let calendar = Calendar.current
+             let startOfDay = calendar.startOfDay(for: queryDate)
+             print(startOfDay)
+             let midnight = calendar.date(bySettingHour: 23, minute: 59, second: 59, of: queryDate)!
+              
+             let predicate = NSPredicate(format: "day >= %@ AND day < %@", queryDate as NSDate, midnight as NSDate)
+
+             fetchRequest.predicate = predicate
+             
+             do {
+                 let portfolios = try context.fetch(fetchRequest)
+                 for port in portfolios{
+                     portArray.append(DailyPortfolios(totalValue: port.totalValue, day: port.day))
+                 }
+                 print(portArray)
+                 completion(.success(portArray))
+             } catch let error as NSError {
+                 completion(.failure(error))
+             }
+         }
+         */
+
 }

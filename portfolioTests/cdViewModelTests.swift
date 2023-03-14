@@ -12,39 +12,20 @@ final class cdViewModelTests: XCTestCase {
 
     private var sut : coreDataViewModel!
     private var cdServiceProtocol : MockCoreDataService!
-    private var cdOutput : MockCdViewModelOutput!
     
     override func setUpWithError() throws {
         // Put setup code here. This method is called before the invocation of each test method in the class.
         cdServiceProtocol = MockCoreDataService()
-        cdOutput = MockCdViewModelOutput()
         sut = coreDataViewModel(cdServiceProtocol: cdServiceProtocol)
-        sut.cdOutput = cdOutput
-        
     }
 
     override func tearDownWithError() throws {
         // Put teardown code here. This method is called after the invocation of each test method in the class.
     }
     
-    func testUpdateView_WhenGetCoredataSucces_ShowPortfolio() throws {
-        
-        let mockPortfolio = portfolio(eur: 15, gbp: 49, rub: 4, usd: 50)
-        
-        cdServiceProtocol.getportfolioMockResult = .success(mockPortfolio)
-        
-        sut.getPortfolio()
-        
-        XCTAssertEqual(cdOutput.updateViewArray.first?.eur, 15)
-        XCTAssertEqual(cdOutput.updateViewArray.first?.gbp, 49)
-        XCTAssertEqual(cdOutput.updateViewArray.first?.rub, 4)
-        XCTAssertEqual(cdOutput.updateViewArray.first?.usd, 50)
-        XCTAssertEqual(cdOutput.updateViewArray.first?.isSucces, true)
-        
-    }
     
     func testSavePortfolio_isSucces() throws{
-        let mockPortfolio = portfolio(eur: 15, gbp: 49, rub: 4, usd: 50)
+        let mockPortfolio = portfolio(name: "EUR", value: 35, createdTime: Date(), createdTimeString: "3/3/2023")
         
         cdServiceProtocol.savePortfolioMockResult = .success(true)
         
@@ -52,20 +33,6 @@ final class cdViewModelTests: XCTestCase {
         
         XCTAssertEqual(sut.retBool, true)
     }
-    
-    
-    
-    func testPercentCalculate_Succes() throws {
-        let mockPortfolio = portfolio(eur: 5, gbp: 15, rub: 15, usd: 15)
-        
-        cdServiceProtocol.getportfolioMockResult = .success(mockPortfolio)
-        
-        sut.getPortfolio()
-        
-        
-    }
-    
-    
     
 
     func testPerformanceExample() throws {
@@ -78,26 +45,28 @@ final class cdViewModelTests: XCTestCase {
 }
 
 class MockCoreDataService : CoreDataServiceProtocol {
+    func getPortfolioWithDayFilter(date: String, completion: @escaping (Result<[DailyPortfolios], Error>) -> Void) {
+        //
+    }
     
-    var getportfolioMockResult : Result<portfolio.portfolio, Error>?
+    
     var savePortfolioMockResult : Result<Bool, Error>?
     
-    func savePortfolio(portfolio: portfolio.portfolio, completion: @escaping (Result<Bool, Error>) -> Void) {
+    func savePortfolio(portfolio: portfolio, completion: @escaping (Result<Bool, Error>) -> Void) {
         if let result = savePortfolioMockResult {
             completion(result)
         }
     }
     
-    func getPortfolio(completion: @escaping (Result<portfolio.portfolio, Error>) -> Void) {
-        if let result = getportfolioMockResult {
-            completion(result)
-        }
+    func getPortfolio(completion: @escaping (Result<[portfolio], Error>) -> Void) {
+        //
     }
-}
-
-class MockCdViewModelOutput : cdViewModelOutput {
-    var updateViewArray : [(eur: Double, gbp: Double, rub: Double, usd: Double, isSucces: Bool)] = []
-    func updatePortfolioLabels(eur: Double, gbp: Double, rub: Double, usd: Double, isSucces: Bool) {
-        updateViewArray.append((eur,gbp,rub,usd,isSucces))
-    }
+    
+    /**
+     func getPortfolio(completion: @escaping (Result<portfolio.portfolio, Error>) -> Void) {
+         if let result = getportfolioMockResult {
+             completion(result)
+         }
+     }
+     */
 }

@@ -29,7 +29,7 @@ class PortfolioCell: UICollectionViewCell, SelfConfiguringCell {
     
     private let Namelabel: UILabel = {
         let label = UILabel()
-        label.textColor = .label
+        label.textColor = .white
         label.textAlignment = .center
         label.font = .systemFont(ofSize: 22, weight: .bold)
         label.text = "Name"
@@ -38,7 +38,7 @@ class PortfolioCell: UICollectionViewCell, SelfConfiguringCell {
     
     private let PriceLabel: UILabel = {
         let label = UILabel()
-        label.textColor = .label
+        label.textColor = .white
         label.textAlignment = .center
         label.font = .systemFont(ofSize: 19, weight: .bold)
         label.text = "Price"
@@ -47,7 +47,7 @@ class PortfolioCell: UICollectionViewCell, SelfConfiguringCell {
     
     private let PriceTLlabel: UILabel = {
         let label = UILabel()
-        label.textColor = .label
+        label.textColor = .white
         label.textAlignment = .center
         label.font = .systemFont(ofSize: 19, weight: .bold)
         label.text = "Price ₺"

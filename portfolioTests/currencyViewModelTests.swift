@@ -19,7 +19,7 @@ final class currencyViewModelTests: XCTestCase {
         // Put setup code here. This method is called before the invocation of each test method in the class.
         networkService = MockNetworkService()
         currOutput = MockCurrencyViewModelOutput()
-        sut = portfolio.currencyViewModel(networkService: networkService, cdService: cdService)
+        sut = currencyViewModel(networkService: networkService, cdService: cdService)
         sut.output = currOutput
     }
 
@@ -29,7 +29,7 @@ final class currencyViewModelTests: XCTestCase {
 
     func testUpdateView_whenAPISucces_showsCurrencies() throws {
         
-        let mockCurrencies = Currency(data: dataCurrency(eur: 10, gbp: 15, rub: 20, usd: 30))
+        let mockCurrencies = Currency(data: ["EUR" : 19.232])
         
         do {
             let data = try JSONEncoder().encode(mockCurrencies)
@@ -37,7 +37,7 @@ final class currencyViewModelTests: XCTestCase {
         } catch{}
         
                 
-        sut.getCurrencyData()
+        sut.getCurrency()
         
         XCTAssertEqual(currOutput.updateViewArray.first?.eur, 10)
         XCTAssertEqual(currOutput.updateViewArray.first?.gbp, 15)
@@ -51,7 +51,7 @@ final class currencyViewModelTests: XCTestCase {
         
         networkService.fetchMockResult = .failure(NSError())
         
-        sut.getCurrencyData()
+        sut.getCurrency()
         XCTAssertEqual(currOutput.updateViewArray.first?.eur, 0)
         XCTAssertEqual(currOutput.updateViewArray.first?.gbp, 0)
         XCTAssertEqual(currOutput.updateViewArray.first?.rub, 0)
@@ -81,6 +81,18 @@ class MockNetworkService : NetworkServiceProtocol {
 }
 
 class MockCurrencyViewModelOutput : currencyViewModelOutput {
+    func updateCurrencyLabels(keys: [[String]], values: [[Double]], isSucces: Bool) {
+        //
+    }
+    
+    func fillPortfolio(collectionArray: [collectionPortfolio]) {
+        //
+    }
+    
+    func updatePiechart(view: UIView) {
+        //
+    }
+    
     func convertTL(eur: Double, gbp: Double, rub: Double, usd: Double) {
         //
     }

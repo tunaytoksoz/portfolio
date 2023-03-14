@@ -10,7 +10,7 @@ import Charts
 import UIKit
 
 protocol currencyViewModelOutput : AnyObject{
-    func updateCurrencyLabels(keys : [[String]], values : [[Double]], isSucces: Bool)
+    func updateCurrencyLabels(keys : [[String]], values : [[Double]], currencies : [String:Double] , isSucces: Bool)
     func fillPortfolio(collectionArray : [collectionPortfolio])
     func updatePiechart(view : UIView)
 }

@@ -11,3 +11,7 @@ import Foundation
 struct Currency : Codable{
         let data: [String : Double]
 }
+
+struct CurrencyWithHistory : Codable {
+    let data : [String : [String : Double]]
+}
