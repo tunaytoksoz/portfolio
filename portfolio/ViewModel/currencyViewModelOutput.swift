@@ -12,5 +12,13 @@ import UIKit
 protocol currencyViewModelOutput : AnyObject{
     func updateCurrencyLabels(keys : [[String]], values : [[Double]], currencies : [String:Double] , isSucces: Bool)
     func fillPortfolio(collectionArray : [collectionPortfolio])
-    func updatePiechart(view : UIView)
+    func updateCharts(view : UIView, type: chartType)
+}
+
+
+enum chartType {
+    case pie
+    case barDay
+    case barWeek
+    case barMonth
 }

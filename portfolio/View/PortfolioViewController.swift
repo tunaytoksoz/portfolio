@@ -8,21 +8,20 @@
 import UIKit
 import Charts
 
-class PortfolioViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource {
+class PortfolioViewController: UIViewController {
     
     private let currencyViewModel : currencyViewModel
-    
     private let cdViewModel : coreDataViewModel
     
     var collectionView: UICollectionView!
     
     var portfolioArray : [collectionPortfolio] = [collectionPortfolio]()
-    
-    var chartArray : [UIView] = [UIView]()
+    var chartArray : [UIView] = [UIView(),UIView(),UIView(),UIView()]
     
     var keys : [[String]] = [[String]]()
     var values : [[Double]] = [[Double]]()
     var currencies : [String : Double] = [:]
+    
     init(currencyViewModel: currencyViewModel, cdViewModel: coreDataViewModel) {
         self.currencyViewModel = currencyViewModel
         self.cdViewModel = cdViewModel
@@ -46,15 +45,16 @@ class PortfolioViewController: UIViewController, UICollectionViewDelegate, UICol
         view.addSubview(collectionView)
         
         title = "Portfolio App"
+        
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(didTapAdd))
-        //cdViewModel.getDailyPortfolio()
+       // print(FileManager.default.urls(for: .documentDirectory, in: .userDomainMask))
+        //CoreDataService().fakeGenerator()
         currencyViewModel.getCurrency()
         currencyViewModel.convertPortfolio()
-        currencyViewModel.updateChart() // piechart
-        
-        
-        print(FileManager.default.urls(for: .documentDirectory, in: .userDomainMask))
-        
+        currencyViewModel.updatePieChart()
+        cdViewModel.updateWeekChart()
+        cdViewModel.updateWeekSummaryGraphic()
+        cdViewModel.updateMonthlyGraphic()
        
         collectionView.delegate = self
         collectionView.dataSource = self
@@ -63,10 +63,6 @@ class PortfolioViewController: UIViewController, UICollectionViewDelegate, UICol
         collectionView.register(ChartCell.self, forCellWithReuseIdentifier: ChartCell.reuseIdentifier)
         collectionView.register(CurrencyCell.self, forCellWithReuseIdentifier: CurrencyCell.reuseIdentifier)
         
-    }
-    
-    func numberOfSections(in collectionView: UICollectionView) -> Int {
-        3
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
@@ -82,87 +78,17 @@ class PortfolioViewController: UIViewController, UICollectionViewDelegate, UICol
                     if succes {
                         AlertManager().showBasicAlert(on: self, title: "Başarılı", message: "Satıldı.", prefer: .alert)
                         self.currencyViewModel.convertPortfolio()
-                        self.currencyViewModel.updateChart() // piechart
+                        self.currencyViewModel.updatePieChart()
+                        self.cdViewModel.updateWeekChart()
                     }
                 } else {
                     AlertManager().showBasicAlert(on: self, title: "Başarısız", message: "Döviz Tutarını Kontrol Edin!", prefer: .alert)
                 }
             })
         }
-        
     }
-    
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        switch indexPath.section {
-        case 0:
-            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CurrencyCell.reuseIdentifier, for: indexPath) as? CurrencyCell else {
-                return UICollectionViewCell()
-            }
-            if keys.first?.count == 0 {
-                cell.configure(key: keys[indexPath.item], value: values[indexPath.item], isSucces: false)
-            } else {
-                cell.configure(key: keys[indexPath.item], value: values[indexPath.item], isSucces: true)
-            }
-            return cell
-        case 1:
-            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ChartCell.reuseIdentifier, for: indexPath) as? ChartCell else {
-                return UICollectionViewCell()
-            }
-            cell.configure(view: chartArray[indexPath.item])
-            return cell
-        default:
-            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PortfolioCell.reuseIdentifier, for: indexPath) as? PortfolioCell else {
-                return UICollectionViewCell()
-            }
-            cell.configure(collectionPortfolio: portfolioArray[indexPath.item])
-            return cell
-        }
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        switch section {
-        case 0:
-            return keys.count
-        case 1:
-            return chartArray.count
-        case 2:
-            return portfolioArray.count
-        default:
-            return 1
-        }
-    }
-}
-
-extension PortfolioViewController : currencyViewModelOutput, cdViewModelOutput{
-    
-    
-    func updateCurrencyLabels(keys: [[String]], values: [[Double]], currencies: [String : Double], isSucces: Bool) {
-        DispatchQueue.main.async {
-            self.keys = keys
-            self.values = values
-            self.currencies = currencies
-            self.collectionView.reloadData()
-        }
-    }
-    
-    
-   
-    
-    func updatePiechart(view: UIView) {
-        DispatchQueue.main.async {
-            self.chartArray.removeAll()
-            self.chartArray.append(view)
-            self.collectionView.reloadData()
-        }
-    }
-    
-    func fillPortfolio(collectionArray: [collectionPortfolio]) {
-        DispatchQueue.main.async {
-            self.portfolioArray = collectionArray
-            self.collectionView.reloadData()
-        }
-    }
-
+     
+    // MARK: - Objc Functions
     @objc func didTapAdd(){
         AlertManager().showActionSheet(on: self, currency: keys, actionHandler:  { text in
             guard let name = text else { return }
@@ -175,60 +101,53 @@ extension PortfolioViewController : currencyViewModelOutput, cdViewModelOutput{
                 if succes {
                     AlertManager().showBasicAlert(on: self, title: "Başarılı", message: "Satın Alınan Döviz Portföyünüze Eklendi.", prefer: .alert)
                     self.currencyViewModel.convertPortfolio()
-                    self.currencyViewModel.updateChart() // piechart
+                    self.currencyViewModel.updatePieChart() // piechart
+                    self.cdViewModel.updateWeekChart()
+                    
+                } else {
+                    AlertManager().showBasicAlert(on: self, title: "Error", message: "error", prefer: .alert)
                 }
             })
         })
     }
+
 }
 
-extension PortfolioViewController {
-    
-    static func createLayout() -> UICollectionViewLayout {
-        let layout = UICollectionViewCompositionalLayout { sectionIndex, layoutEnvironment in
-            
-            switch sectionIndex {
-            case 0:
-                let item = NSCollectionLayoutItem.init(layoutSize: .init(widthDimension: .fractionalWidth(1), heightDimension: .fractionalHeight(1)))
-                item.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 15, bottom: 0, trailing: 15)
-               
-                let group = NSCollectionLayoutGroup.horizontal(layoutSize: .init(widthDimension: .fractionalWidth(1), heightDimension: .absolute(80)), subitems: [item])
-               
-                let section = NSCollectionLayoutSection(group: group)
-                
-                section.orthogonalScrollingBehavior = .continuous
-                return section
-            case 1 :
-                let item = NSCollectionLayoutItem(layoutSize: .init(widthDimension: .fractionalWidth(1), heightDimension: .fractionalHeight(1)))
-                item.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 15, bottom: 0, trailing: 15)
-                
-                let group = NSCollectionLayoutGroup.horizontal(layoutSize: .init(widthDimension: .fractionalWidth(1), heightDimension: .absolute(200)), subitems: [item])
-                
-                let section = NSCollectionLayoutSection(group: group)
-                
-                
-                section.orthogonalScrollingBehavior = .groupPagingCentered
-                
-                return section
-            default:
-                let item = NSCollectionLayoutItem(layoutSize: .init(widthDimension: .fractionalWidth(0.5), heightDimension: .absolute(150)))
-                item.contentInsets = NSDirectionalEdgeInsets(top: 15, leading: 15, bottom: 15, trailing: 15)
-                
-                let group = NSCollectionLayoutGroup.horizontal(layoutSize: .init(widthDimension: .fractionalWidth(1), heightDimension: .absolute(150)), subitems: [item])
-                
-                let section = NSCollectionLayoutSection(group: group)
-                
-                return section
+extension PortfolioViewController : currencyViewModelOutput, cdViewModelOutput{
+    func updateCharts(view: UIView, type: chartType) {
+        DispatchQueue.main.async {
+            switch type {
+            case .pie:
+                self.chartArray[0] = view
+                self.collectionView.reloadData()
+            case .barDay:
+                self.chartArray[1] = view
+                self.collectionView.reloadData()
+            case .barWeek:
+                self.chartArray[2] = view
+                self.collectionView.reloadData()
+            case .barMonth:
+                self.chartArray[3] = view
+                self.collectionView.reloadData()
             }
         }
-
-        let config = UICollectionViewCompositionalLayoutConfiguration()
-        config.interSectionSpacing = 20
-        layout.configuration = config
-        return layout
     }
-
- 
+    
+    func updateCurrencyLabels(keys: [[String]], values: [[Double]], currencies: [String : Double], isSucces: Bool) {
+        DispatchQueue.main.async {
+            self.keys = keys
+            self.values = values
+            self.currencies = currencies
+            self.collectionView.reloadData()
+        }
+    }
+    
+    func fillPortfolio(collectionArray: [collectionPortfolio]) {
+        DispatchQueue.main.async {
+            self.portfolioArray = collectionArray
+            self.collectionView.reloadData()
+        }
+    }
 }
 
 

@@ -59,34 +59,6 @@ class currencyViewModel {
         }
     }
     
-    func getCurrencyLast7days() {
-        
-        let firstDate = DateManager().getDate(dayNumber: 7)
-        let lastDate = DateManager().getDate(dayNumber: 1)
-        
-        if let url = URL(string: baseUrl + "historical?apikey=iMsPqn3Rhbamaq9BxTP0Wh6g7ENnwPd9Khxl1hSH&currencies=JPY%2CEUR%2CCAD%2CPLN%2CPHP%2CUSD%2CGBP%2CRUB&base_currency=TRY&date_from=\(firstDate)T09%3A52%3A06.742Z&date_to=\(lastDate)T09%3A52%3A06.743Z"){
-            networkService.getData(url: url) { result in
-                switch result {
-                case .success(let data):
-                    do {
-                        let currency = try JSONDecoder().decode(CurrencyWithHistory.self, from: data)
-                       
-                        let keys : [String] = Array(currency.data.keys)
-                        
-                        let values : [[String : Double]] = Array(currency.data.values)
-                        
-                       // self.getDailyPortfolio(keys: keys, values: values)
-                        
-                    } catch{
-                        
-                    }
-                case .failure(let error):
-                    print(error.localizedDescription)
-                }
-            }
-        }
-    }
-    
     func grouppedKeys(array : [String]) -> [[String]]{
         var groupedArray = [[String]]()
         for i in stride(from: 0, to: array.count, by: 4) {
@@ -138,7 +110,6 @@ class currencyViewModel {
                                 }
                                 UserDefaults.standard.set(total, forKey: "totalValue")
                                 UserDefaults.standard.synchronize()
-                                self.cdService.saveDailyTable(totalValue: total)
                                 self.output?.fillPortfolio(collectionArray: collectionArray)
                                 
                             case .failure(let error):
@@ -160,7 +131,8 @@ class currencyViewModel {
     
     
     // MARK: - ChartSet
-    func updateChart(){
+    
+    func updatePieChart(){
         
         var collectionArray : [collectionPortfolio] = [collectionPortfolio]()
      
@@ -178,8 +150,8 @@ class currencyViewModel {
                                 }
                                 
                                 collectionArray.removeAll { $0.price == 0.0 }
-                                
                                 self.calculatePercent(collectinArray: collectionArray)
+                                
                             case .failure(let error):
                                 print(error.localizedDescription)
                             }
@@ -211,7 +183,6 @@ class currencyViewModel {
     
     
     func createPieChart(percentArray : [String : Double]){
-        
         DispatchQueue.main.async {
             let view = UIView()
             let pieChartView = PieChartView(frame: CGRect(x: 0, y: 0, width: view.frame.width, height: view.frame.height))
@@ -243,12 +214,15 @@ class currencyViewModel {
             pieChartView.isUserInteractionEnabled = false
             pieChartView.rotationAngle = 0
             pieChartView.drawEntryLabelsEnabled = false
-            
+            pieChartView.animate(xAxisDuration: 1.3, yAxisDuration: 1.3)
             pieChartView.frame = view.frame
             pieChartView.center = view.center
             pieChartView.backgroundColor = .white
             view.addSubview(pieChartView)
-            self.output?.updatePiechart(view: view)
+            self.output?.updateCharts(view: view, type: .pie)
         }
     }
+    
+    
+    
 }

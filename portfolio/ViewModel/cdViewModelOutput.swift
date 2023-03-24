@@ -7,6 +7,8 @@
 
 import Foundation
 import Charts
+import UIKit
 
 protocol cdViewModelOutput : AnyObject {
+    func updateCharts(view : UIView, type: chartType)
 }
