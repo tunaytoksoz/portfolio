@@ -16,10 +16,15 @@ protocol CoreDataServiceProtocol {
     func getDailyTable(completion:  @escaping (Result<[DailyPortfolios],Error>) -> Void)
     func getWeeklyTable(completion: @escaping (Result<[[DailyPortfolios]],Error>) -> Void)
     func getMonthlyTable(completion: @escaping (Result<[String : [Double]],Error>) -> Void)
-    func checkDailyTableDate()
 }
 
 class CoreDataService : CoreDataServiceProtocol {
+    
+    private let groupedData : GroupedData
+    
+    init(groupedData: GroupedData) {
+        self.groupedData = groupedData
+    }
     
  
     let appDelegate = UIApplication.shared.delegate as! AppDelegate
@@ -94,7 +99,7 @@ class CoreDataService : CoreDataServiceProtocol {
     func fakeDataGenerator(){
         let context = appDelegate.persistentContainer.viewContext
         let calendar = Calendar.current
-        let today = calendar.startOfDay(for: Date())
+        let today = calendar.startOfDay(for: Date().endOfDay)
         for i in 1...100 {
             let firstDay = calendar.date(byAdding: .day, value: -i, to: today)!
             
@@ -225,27 +230,13 @@ class CoreDataService : CoreDataServiceProtocol {
             for res in results {
                 weeklyTotals.append(DailyPortfolios(totalValue: res.totalValue, day: res.day))
             }
-            let weeks = grouppedWeek(array: weeklyTotals)
+            
+            let weeks = self.groupedData.groupedWeek(array: weeklyTotals)
             completion(.success(weeks))
         } catch{
             completion(.failure(error))
         }
         
-    }
-    
-    func grouppedWeek(array : [DailyPortfolios]) -> [[DailyPortfolios]]{
-        var weeks = [[DailyPortfolios]]()
-        
-        for index in stride(from: 0, to: array.count, by: 7){
-            var subWeek = [DailyPortfolios]()
-            for j in index..<(index + 7) {
-                if j < array.count {
-                    subWeek.append(array[j])
-                }
-            }
-            weeks.append(subWeek)
-        }
-        return weeks
     }
     
     func getMonthlyTable(completion: @escaping (Result<[String : [Double]],Error>) -> Void){
@@ -263,30 +254,10 @@ class CoreDataService : CoreDataServiceProtocol {
             for port in portfolios {
                 monthlyTable.append(DailyPortfolios(totalValue: port.totalValue, day: port.day))
             }
-            let months = grouppedMonth(array: monthlyTable)
+            let months = self.groupedData.groupedMonth(array: monthlyTable)
             completion(.success(months))
         } catch{
             completion(.failure(error))
         }
-    }
-    
-    func grouppedMonth(array : [DailyPortfolios]) -> [String : [Double]] {
-        var months = [String : [Double]]()
-        
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "MMM-yyyy"
-       
-        for arr in array {
-            if let arrDay = arr.day {
-                let monthString = dateFormatter.string(from: arrDay)
-                if var month = months[monthString]{
-                    months[monthString]?.append(arr.totalValue)
-                } else {
-                    months[monthString] = [arr.totalValue]
-                }
-            }
-        }
-        
-        return months
     }
 }

@@ -14,6 +14,7 @@ class PortfolioViewController: UIViewController {
     private let cdViewModel : coreDataViewModel
     
     var collectionView: UICollectionView!
+    let refreshControl = UIRefreshControl()
     
     var portfolioArray : [collectionPortfolio] = [collectionPortfolio]()
     var chartArray : [UIView] = [UIView(),UIView(),UIView(),UIView()]
@@ -47,14 +48,11 @@ class PortfolioViewController: UIViewController {
         title = "Portfolio App"
         
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(didTapAdd))
+        
         //print(FileManager.default.urls(for: .documentDirectory, in: .userDomainMask))
         //CoreDataService().fakeGenerator()
-        currencyViewModel.getCurrency()
-        currencyViewModel.convertPortfolio()
-        currencyViewModel.updatePieChart()
-        cdViewModel.updateWeekChart()
-        cdViewModel.updateWeekSummaryGraphic()
-        cdViewModel.updateMonthlyGraphic()
+        
+        getData()
        
         collectionView.delegate = self
         collectionView.dataSource = self
@@ -63,6 +61,18 @@ class PortfolioViewController: UIViewController {
         collectionView.register(ChartCell.self, forCellWithReuseIdentifier: ChartCell.reuseIdentifier)
         collectionView.register(CurrencyCell.self, forCellWithReuseIdentifier: CurrencyCell.reuseIdentifier)
         
+        refreshControl.attributedTitle = NSAttributedString(string: "Pull to refresh")
+        refreshControl.addTarget(self, action: #selector(self.refresh(_:)), for: .valueChanged)
+        collectionView.refreshControl = refreshControl
+    }
+    
+    func getData(){
+        currencyViewModel.getCurrency()
+        currencyViewModel.convertPortfolio()
+        currencyViewModel.updatePieChart()
+        cdViewModel.updateWeekChart()
+        cdViewModel.updateWeekSummaryGraphic()
+        cdViewModel.updateMonthlyGraphic()
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
@@ -77,11 +87,7 @@ class PortfolioViewController: UIViewController {
                     let succes = self.cdViewModel.saveObject(portfolio: portfolio(name: name, value: -text), curr: self.currencies[name] ?? 1)
                     if succes {
                         AlertManager().showBasicAlert(on: self, title: "Başarılı", message: "Satıldı.", prefer: .alert)
-                        self.currencyViewModel.convertPortfolio()
-                        self.currencyViewModel.updatePieChart()
-                        self.cdViewModel.updateWeekChart()
-                        self.cdViewModel.updateWeekSummaryGraphic()
-                        self.cdViewModel.updateMonthlyGraphic()
+                        self.getData()
                     }
                 } else {
                     AlertManager().showBasicAlert(on: self, title: "Başarısız", message: "Döviz Tutarını Kontrol Edin!", prefer: .alert)
@@ -97,27 +103,38 @@ class PortfolioViewController: UIViewController {
             
             AlertManager().showInputAlert(on: self, title: "\(name) Al", subtitle: "", actionTitle: "Al", actionHandler:  { text in
                 
-                guard let text = Double(text ?? "0") else { return }
-                let succes = self.cdViewModel.saveObject(portfolio: portfolio(name: name, value: text), curr: self.currencies[name] ?? 1)
-                
-                if succes {
-                    AlertManager().showBasicAlert(on: self, title: "Başarılı", message: "Satın Alınan Döviz Portföyünüze Eklendi.", prefer: .alert)
-                    self.currencyViewModel.convertPortfolio()
-                    self.currencyViewModel.updatePieChart() // piechart
-                    self.cdViewModel.updateWeekChart()
-                    self.cdViewModel.updateWeekSummaryGraphic()
-                    self.cdViewModel.updateMonthlyGraphic()
+                if let text = text {
+                    guard let text = Double(text) else { return AlertManager().showBasicAlert(on: self, title: "Error", message: "error", prefer: .alert)}
                     
-                } else {
-                    AlertManager().showBasicAlert(on: self, title: "Error", message: "error", prefer: .alert)
+                    if text > 0 {
+                        let succes = self.cdViewModel.saveObject(portfolio: portfolio(name: name, value: text), curr: self.currencies[name] ?? 1)
+                        
+                        if succes {
+                            AlertManager().showBasicAlert(on: self, title: "Başarılı", message: "Satın Alınan Döviz Portföyünüze Eklendi.", prefer: .alert)
+                            self.getData()
+                            
+                        } else {
+                            AlertManager().showBasicAlert(on: self, title: "Error", message: "error", prefer: .alert)
+                        }
+                    } else {
+                        AlertManager().showBasicAlert(on: self, title: "Error", message: "Geçersiz Değer", prefer: .alert)
+                    }
                 }
+                
             })
         })
     }
+    
+    @objc func refresh(_ sender: AnyObject) {
+            self.collectionView.reloadData()
+            self.getData()
+            refreshControl.endRefreshing()
+        }
 
 }
 
 extension PortfolioViewController : currencyViewModelOutput, cdViewModelOutput{
+    
     func updateCharts(view: UIView, type: chartType) {
         DispatchQueue.main.async {
             switch type {

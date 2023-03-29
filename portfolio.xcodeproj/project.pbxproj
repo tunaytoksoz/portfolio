@@ -34,6 +34,9 @@
 		667CA62029BB351600311D24 /* portfolio.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 667CA61E29BB351600311D24 /* portfolio.xcdatamodeld */; };
 		667CA62229BF2A7C00311D24 /* DateManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 667CA62129BF2A7C00311D24 /* DateManager.swift */; };
 		667CA62429BF49FE00311D24 /* DailyPortfolio.swift in Sources */ = {isa = PBXBuildFile; fileRef = 667CA62329BF49FE00311D24 /* DailyPortfolio.swift */; };
+		669FD8EA29D43B6300E99148 /* ChartGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 669FD8E929D43B6300E99148 /* ChartGenerator.swift */; };
+		669FD8EC29D43C0C00E99148 /* Calculate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 669FD8EB29D43C0C00E99148 /* Calculate.swift */; };
+		669FD8EE29D43D8700E99148 /* GroupedData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 669FD8ED29D43D8700E99148 /* GroupedData.swift */; };
 		66B185F729C2FB6A00F2448B /* ExtensionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66B185F629C2FB6A00F2448B /* ExtensionViewController.swift */; };
 /* End PBXBuildFile section */
 
@@ -85,6 +88,9 @@
 		667CA61F29BB351600311D24 /* portfolio.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = portfolio.xcdatamodel; sourceTree = "<group>"; };
 		667CA62129BF2A7C00311D24 /* DateManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateManager.swift; sourceTree = "<group>"; };
 		667CA62329BF49FE00311D24 /* DailyPortfolio.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyPortfolio.swift; sourceTree = "<group>"; };
+		669FD8E929D43B6300E99148 /* ChartGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartGenerator.swift; sourceTree = "<group>"; };
+		669FD8EB29D43C0C00E99148 /* Calculate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Calculate.swift; sourceTree = "<group>"; };
+		669FD8ED29D43D8700E99148 /* GroupedData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupedData.swift; sourceTree = "<group>"; };
 		66B185F629C2FB6A00F2448B /* ExtensionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -226,6 +232,9 @@
 			children = (
 				66452A2C29B5D4600073067E /* AlertManager.swift */,
 				667CA62129BF2A7C00311D24 /* DateManager.swift */,
+				669FD8E929D43B6300E99148 /* ChartGenerator.swift */,
+				669FD8EB29D43C0C00E99148 /* Calculate.swift */,
+				669FD8ED29D43D8700E99148 /* GroupedData.swift */,
 			);
 			path = Support;
 			sourceTree = "<group>";
@@ -386,12 +395,15 @@
 				66452A2D29B5D4600073067E /* AlertManager.swift in Sources */,
 				661B918029AFB4A300648CB1 /* currencyViewModelOutput.swift in Sources */,
 				661B917429AD324C00648CB1 /* CoreDataService.swift in Sources */,
+				669FD8EA29D43B6300E99148 /* ChartGenerator.swift in Sources */,
 				661B917E29AE118C00648CB1 /* coreDataViewModel.swift in Sources */,
 				667CA62029BB351600311D24 /* portfolio.xcdatamodeld in Sources */,
 				66452A3629B7DD2B0073067E /* ChartCell.swift in Sources */,
 				661B913629ACB0C900648CB1 /* AppDelegate.swift in Sources */,
 				661B918229AFC56D00648CB1 /* cdViewModelOutput.swift in Sources */,
 				66B185F729C2FB6A00F2448B /* ExtensionViewController.swift in Sources */,
+				669FD8EC29D43C0C00E99148 /* Calculate.swift in Sources */,
+				669FD8EE29D43D8700E99148 /* GroupedData.swift in Sources */,
 				66452A3429B7D3E90073067E /* CollectionPortfolio.swift in Sources */,
 				667CA62429BF49FE00311D24 /* DailyPortfolio.swift in Sources */,
 				661B913829ACB0C900648CB1 /* SceneDelegate.swift in Sources */,
