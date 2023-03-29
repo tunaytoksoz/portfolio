@@ -47,7 +47,7 @@ class PortfolioViewController: UIViewController {
         title = "Portfolio App"
         
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(didTapAdd))
-       // print(FileManager.default.urls(for: .documentDirectory, in: .userDomainMask))
+        //print(FileManager.default.urls(for: .documentDirectory, in: .userDomainMask))
         //CoreDataService().fakeGenerator()
         currencyViewModel.getCurrency()
         currencyViewModel.convertPortfolio()
@@ -80,6 +80,8 @@ class PortfolioViewController: UIViewController {
                         self.currencyViewModel.convertPortfolio()
                         self.currencyViewModel.updatePieChart()
                         self.cdViewModel.updateWeekChart()
+                        self.cdViewModel.updateWeekSummaryGraphic()
+                        self.cdViewModel.updateMonthlyGraphic()
                     }
                 } else {
                     AlertManager().showBasicAlert(on: self, title: "Başarısız", message: "Döviz Tutarını Kontrol Edin!", prefer: .alert)
@@ -103,6 +105,8 @@ class PortfolioViewController: UIViewController {
                     self.currencyViewModel.convertPortfolio()
                     self.currencyViewModel.updatePieChart() // piechart
                     self.cdViewModel.updateWeekChart()
+                    self.cdViewModel.updateWeekSummaryGraphic()
+                    self.cdViewModel.updateMonthlyGraphic()
                     
                 } else {
                     AlertManager().showBasicAlert(on: self, title: "Error", message: "error", prefer: .alert)

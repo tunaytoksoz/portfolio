@@ -129,7 +129,7 @@ class coreDataViewModel {
         cdServiceProtocol.getWeeklyTable() { result in
             switch result {
             case .success(let success):
-                self.calculateSummaryWeek(array: success)
+                self.calculateAverageWeek(array: success)
             case .failure(let failure):
                 print(failure.localizedDescription)
             }
@@ -137,14 +137,14 @@ class coreDataViewModel {
     }
     
     
-    func calculateSummaryWeek(array : [[DailyPortfolios]]){
+    func calculateAverageWeek(array : [[DailyPortfolios]]){
         var weekArray : [DailyPortfolios] = [DailyPortfolios]()
         for subArray in array{
             var total = 0.0
             for i in subArray{
                 total += i.totalValue
             }
-            total = total / Double(array.count)
+            total = total / Double(subArray.count)
             weekArray.append(DailyPortfolios(totalValue: total, day: subArray.last?.day))
         }
         createWeekBarChart(values: weekArray)
@@ -152,6 +152,11 @@ class coreDataViewModel {
     
     
     func createWeekBarChart(values : [DailyPortfolios] ){
+        let calendar = Calendar.current
+        var days : [String] = [String]()
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "MMM-dd"
+        
         DispatchQueue.main.async {
             let view = UIView()
             let chartView = BarChartView(frame: CGRect(x: 0, y: 0, width: view.frame.width, height: view.frame.height))
@@ -160,9 +165,11 @@ class coreDataViewModel {
             for (index, value) in values.enumerated(){
                 let entry = BarChartDataEntry(x: Double(index), y: value.totalValue)
                 entries.append(entry)
+                var weekFirstDay = calendar.dateComponents([.calendar, .yearForWeekOfYear, .weekOfYear], from: value.day!).date
+                days.append(dateFormatter.string(from: weekFirstDay!) + "\n" + dateFormatter.string(from: value.day!))
             }
             
-            chartView.xAxis.valueFormatter = IndexAxisValueFormatter(values: ["Hafta 4", "Hafta 3", "Hafta 2", "Hafta 1"])
+            chartView.xAxis.valueFormatter = IndexAxisValueFormatter(values: days)
             chartView.xAxis.labelPosition = .bottom
             chartView.fitBars = true
             chartView.xAxis.granularity = 1.0
@@ -170,10 +177,16 @@ class coreDataViewModel {
             
             chartView.leftAxis.axisMinimum = 0
             chartView.rightAxis.enabled = false
+            let format = NumberFormatter()
+            format.maximumFractionDigits = 2
+            format.minimumFractionDigits = 0
+            format.numberStyle = .decimal
+            let formatter = DefaultValueFormatter(formatter: format)
             
             let dataSet = BarChartDataSet(entries: entries, label: "Last 4 Week")
             let data = BarChartData(dataSet: dataSet)
             chartView.data = data
+            chartView.barData?.setValueFormatter(formatter)
             
             chartView.animate(xAxisDuration: 2.0, yAxisDuration: 2.0)
             chartView.frame = view.frame
@@ -210,6 +223,7 @@ class coreDataViewModel {
             let avg = Double(total) / Double(count)
             averages[mont] = avg
         }
+        
         createMonthlyBarChart(data: averages)
     }
     
@@ -219,7 +233,15 @@ class coreDataViewModel {
             let chartView = BarChartView(frame: CGRect(x: 0, y: 0, width: view.frame.width, height: view.frame.height))
             var entries = [BarChartDataEntry]()
             var months = [String]()
-            for (index, value) in data.enumerated(){
+            
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "MMM-yyyy"
+            
+            let result = data.sorted {
+                dateFormatter.date(from: $0.0)! < dateFormatter.date(from: $1.0)!
+            }
+            
+            for (index, value) in result.enumerated(){
                 let entry = BarChartDataEntry(x: Double(index), y: value.value)
                 entries.append(entry)
                 months.append(value.key)
@@ -234,9 +256,16 @@ class coreDataViewModel {
             chartView.leftAxis.axisMinimum = 0
             chartView.rightAxis.enabled = false
             
-            let dataSet = BarChartDataSet(entries: entries, label: "Last \(months.count) months")
+            let format = NumberFormatter()
+            format.maximumFractionDigits = 2
+            format.minimumFractionDigits = 0
+            format.numberStyle = .decimal
+            let formatter = DefaultValueFormatter(formatter: format)
+            
+            let dataSet = BarChartDataSet(entries: entries, label: "Last \(months.count) month")
             let data = BarChartData(dataSet: dataSet)
             chartView.data = data
+            chartView.barData?.setValueFormatter(formatter)
             
             chartView.animate(xAxisDuration: 2.0, yAxisDuration: 2.0)
             chartView.frame = view.frame

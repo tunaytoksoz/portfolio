@@ -24,7 +24,6 @@ class CoreDataService : CoreDataServiceProtocol {
  
     let appDelegate = UIApplication.shared.delegate as! AppDelegate
     
-    
     func checkDailyTableDate(){
         
         let context = appDelegate.persistentContainer.viewContext
@@ -41,7 +40,7 @@ class CoreDataService : CoreDataServiceProtocol {
             let calendar = Calendar.current
             let last = calendar.startOfDay(for: lastDay)
             
-            let components = calendar.dateComponents([.day], from: last, to: Date())
+            let components = calendar.dateComponents([.day], from: last, to: Date().endOfDay)
             
             if let days = components.day{
                 if days > 1 {
@@ -68,16 +67,11 @@ class CoreDataService : CoreDataServiceProtocol {
         
         let context = appDelegate.persistentContainer.viewContext
         
-        let today = Date().formatted(date: .numeric, time: .omitted)
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "MM/dd/yyyy"
-        let queryDate = dateFormatter.date(from: today)!
-        let calendar = Calendar.current
-        let startOfDay = calendar.startOfDay(for: queryDate)
-        let midnight = calendar.date(bySettingHour: 23, minute: 59, second: 59, of: startOfDay)!
+        let startOfDay = Date().startOfDay
+        let midnight = Date().endOfDay
         
         let fetchRequest : NSFetchRequest<DailyPortfolio> = DailyPortfolio.fetchRequest()
-        fetchRequest.predicate = NSPredicate(format: "day >= %@ AND day < %@", queryDate as NSDate, midnight as NSDate)
+        fetchRequest.predicate = NSPredicate(format: "day >= %@ AND day < %@", startOfDay as NSDate, midnight as NSDate)
         
         do {
             let response = try context.fetch(fetchRequest)
@@ -182,6 +176,7 @@ class CoreDataService : CoreDataServiceProtocol {
     
     func getDailyTable(completion:  @escaping (Result<[DailyPortfolios],Error>) -> Void){
         checkDailyTableDate()
+        
         let context = appDelegate.persistentContainer.viewContext
         
         let fetchRequest : NSFetchRequest<DailyPortfolio> = DailyPortfolio.fetchRequest()
@@ -189,7 +184,7 @@ class CoreDataService : CoreDataServiceProtocol {
         var dailyTotals : [DailyPortfolios] = [DailyPortfolios]()
         
         let calendar = Calendar.current
-        let today = calendar.startOfDay(for: Date())
+        let today = Date().startOfDay
         let firstDay = calendar.date(byAdding: .day, value: -6, to: today)!
         
         let sortDescriptor = NSSortDescriptor(key: "day", ascending: true)
@@ -216,17 +211,13 @@ class CoreDataService : CoreDataServiceProtocol {
         var weeklyTotals : [DailyPortfolios] = [DailyPortfolios]()
         
         let calendar = Calendar.current
-        
-        let weekDay = calendar.component(.weekday, from: .now)
-        
-        
-        let lastDayofWeek = calendar.date(byAdding: .day, value: -weekDay, to: .now)!
-        let firstDayofWeeks = calendar.date(byAdding: .weekOfMonth, value: -4, to: lastDayofWeek)!
-        
+        let lastDayofWeek = calendar.date(byAdding: .weekOfYear, value: -1, to: Date().endOfWeek)!
+        let firstDayofWeeksOneMonthAgo = calendar.date(byAdding: .weekOfMonth, value: -4, to: lastDayofWeek)!
+
         let sortDescriptor = NSSortDescriptor(key: "day", ascending: true)
         fetchRequest.sortDescriptors = [sortDescriptor]
         
-        fetchRequest.predicate = NSPredicate(format: "day > %@ AND day < %@", firstDayofWeeks as NSDate, lastDayofWeek as NSDate)
+        fetchRequest.predicate = NSPredicate(format: "day > %@ AND day < %@", firstDayofWeeksOneMonthAgo as NSDate, lastDayofWeek as NSDate)
         
         do{
             let results = try context.fetch(fetchRequest)
@@ -283,7 +274,7 @@ class CoreDataService : CoreDataServiceProtocol {
         var months = [String : [Double]]()
         
         let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "MMM"
+        dateFormatter.dateFormat = "MMM-yyyy"
        
         for arr in array {
             if let arrDay = arr.day {
@@ -295,6 +286,7 @@ class CoreDataService : CoreDataServiceProtocol {
                 }
             }
         }
+        
         return months
     }
 }
