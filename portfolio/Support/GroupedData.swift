@@ -7,9 +7,16 @@
 
 import Foundation
 
-class GroupedData {
+protocol GroupedDataProtocol {
+    func groupedKeys(array : [String]) -> [[String]]
+    func groupedValues(array : [Double]) -> [[Double]]
+    func groupedWeek(array : [DailyPortfolios]) -> [[DailyPortfolios]]
+    func groupedMonth(array : [DailyPortfolios]) -> [String : [Double]]
+}
+
+class GroupedData : GroupedDataProtocol {
     
-    func groupedKeys(array : [String]) -> [[String]]{
+    func groupedKeys(array : [String]) -> [[String]] {
         var groupedArray = [[String]]()
         for i in stride(from: 0, to: array.count, by: 4) {
             var group = [String]()
@@ -23,7 +30,7 @@ class GroupedData {
         return groupedArray
     }
     
-    func groupedValues(array : [Double]) -> [[Double]]{
+    func groupedValues(array : [Double]) -> [[Double]] {
         var groupedArray = [[Double]]()
         for i in stride(from: 0, to: array.count, by: 4) {
             var group = [Double]()

@@ -23,7 +23,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let chartGenerator = ChartGenerator()
         let groupedData = GroupedData()
         let cdService = CoreDataService(groupedData: groupedData)
-        let currencyViewModel = currencyViewModel(networkService: networkService, cdService: cdService, calculate: calculate , chartGenerator: chartGenerator, gropuedData: groupedData)
+        let currencyViewModel = currencyViewModel(networkService: networkService, cdService: cdService, calculate: calculate , chartGenerator: chartGenerator, groupedData: groupedData)
         let cdViewModel = coreDataViewModel(cdServiceProtocol: cdService, networkServiceProtocol: networkService, chartGenerator: chartGenerator, groupedData: groupedData, calculate: calculate)
         window.rootViewController = UINavigationController(rootViewController: PortfolioViewController(currencyViewModel: currencyViewModel, cdViewModel: cdViewModel))
         self.window = window

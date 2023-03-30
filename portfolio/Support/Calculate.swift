@@ -7,7 +7,14 @@
 
 import Foundation
 
-class Calculate {
+protocol CalculateProtocol {
+    func calculatePercent(collectinArray : [collectionPortfolio] ) -> [String : Double]
+    func calculateTL(portfolios : [portfolio], currency : Currency) -> [collectionPortfolio]
+    func calculateAverageWeek(array : [[DailyPortfolios]]) -> [DailyPortfolios]
+    func calculateMonthlyAverage(data : [String : [Double]]) -> [String : Double]
+}
+
+class Calculate : CalculateProtocol {
     
     func calculatePercent(collectinArray : [collectionPortfolio] ) -> [String : Double] {
         var total = 0.0
@@ -23,9 +30,8 @@ class Calculate {
         return percentArray
     }
     
-    func calculateTL(portfolios : [portfolio], currency : Currency) -> [collectionPortfolio]{
+    func calculateTL(portfolios : [portfolio], currency : Currency) -> [collectionPortfolio] {
         var collectionArray : [collectionPortfolio] = [collectionPortfolio]()
-        
         for port in portfolios{
             collectionArray.append(collectionPortfolio(name: port.name, price: port.value, priceTL: port.value / (currency.data[port.name] ?? 1)))
         }
@@ -37,6 +43,7 @@ class Calculate {
     
     func calculateAverageWeek(array : [[DailyPortfolios]]) -> [DailyPortfolios] {
         var weekArray : [DailyPortfolios] = [DailyPortfolios]()
+        
         for subArray in array{
             var total = 0.0
             for i in subArray{

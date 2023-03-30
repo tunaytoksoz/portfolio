@@ -18,7 +18,6 @@ class coreDataViewModel {
     private let calculate : Calculate
 
     weak var cdOutput : cdViewModelOutput?
-    weak var currencyOutput : currencyViewModelOutput?
     
     private var baseUrl = "https://api.freecurrencyapi.com/v1/"
     
@@ -64,11 +63,11 @@ class coreDataViewModel {
         }
     }
     
-    
     func updateWeekSummaryGraphic(){
         cdServiceProtocol.getWeeklyTable() { result in
             switch result {
             case .success(let success):
+                print(success)
                 let value = self.calculate.calculateAverageWeek(array: success)
                 self.chartGenerator.createWeekBarChart(values: value, cdOutput: self.cdOutput!)
             case .failure(let failure):
@@ -76,7 +75,6 @@ class coreDataViewModel {
             }
         }
     }
-    
     
     func updateMonthlyGraphic() {
         cdServiceProtocol.getMonthlyTable { result in
@@ -89,5 +87,5 @@ class coreDataViewModel {
             }
         }
     }
-
+    
 }

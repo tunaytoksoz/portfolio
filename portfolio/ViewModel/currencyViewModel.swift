@@ -13,21 +13,21 @@ class currencyViewModel {
     
     private let networkService : NetworkServiceProtocol
     private let cdService : CoreDataServiceProtocol
-    private let calculate : Calculate
-    private let chartGenerator : ChartGenerator
-    private let groupedData : GroupedData
+    private let calculate : CalculateProtocol
+    private let chartGenerator : ChartGeneratorProtocol
+    private let groupedData : GroupedDataProtocol
     
     weak var output : currencyViewModelOutput?
     
     private var baseUrl = "https://api.freecurrencyapi.com/v1/"
     
-    init(networkService: NetworkServiceProtocol, cdService: CoreDataServiceProtocol, calculate: Calculate, chartGenerator: ChartGenerator, gropuedData : GroupedData , output: currencyViewModelOutput? = nil) {
+    init(networkService: NetworkServiceProtocol, cdService: CoreDataServiceProtocol, calculate: CalculateProtocol, chartGenerator: ChartGeneratorProtocol, groupedData: GroupedDataProtocol, output: currencyViewModelOutput? = nil) {
         self.networkService = networkService
         self.cdService = cdService
         self.calculate = calculate
         self.chartGenerator = chartGenerator
+        self.groupedData = groupedData
         self.output = output
-        self.groupedData = gropuedData
     }
     
     // MARK: - Currency Get
@@ -75,6 +75,7 @@ class currencyViewModel {
                         self.cdService.getPortfolio { result in
                             switch result {
                             case .success(let portfolios):
+                                print(currency)
                                 collectionArray = self.calculate.calculateTL(portfolios: portfolios, currency: currency)
                                 
                                 for array in collectionArray {
@@ -127,97 +128,5 @@ class currencyViewModel {
                 }
             }
         }
-    }
-    
-/**
- func calculatePercent(collectinArray : [collectionPortfolio] ) {
-     var total = 0.0
-     var percentArray : [String : Double] = [:]
-     for array in collectinArray {
-         total += array.priceTL
-     }
-     
-     for array in collectinArray {
-         percentArray[array.name] = array.priceTL * 100 / total
-     }
-     
-     self.createPieChart(percentArray: percentArray)
-     
- }
- 
- 
- func createPieChart(percentArray : [String : Double]){
-     DispatchQueue.main.async {
-         let view = UIView()
-         let pieChartView = PieChartView(frame: CGRect(x: 0, y: 0, width: view.frame.width, height: view.frame.height))
-
-         var entryPortfolios = [ChartDataEntry]()
-         
-         for array in percentArray{
-             let entry = PieChartDataEntry(value: array.value, label: array.key)
-             entryPortfolios.append(entry)
-         }
-
-         let dataSet = PieChartDataSet(entries: entryPortfolios)
-         dataSet.colors = ChartColorTemplates.colorful()
-         
-         let data = PieChartData(dataSet: dataSet)
-         pieChartView.data = data
-     
-         let formatter = NumberFormatter()
-         formatter.numberStyle = .percent
-         formatter.maximumFractionDigits = 2
-         formatter.multiplier = 1
-         formatter.percentSymbol = "%"
-             
-         let setFormatter = DefaultValueFormatter(formatter: formatter)
-         data.setValueFormatter(setFormatter)
-         
-         pieChartView.legend.enabled = true
-         pieChartView.drawHoleEnabled = false
-         pieChartView.isUserInteractionEnabled = false
-         pieChartView.rotationAngle = 0
-         pieChartView.drawEntryLabelsEnabled = false
-         pieChartView.animate(xAxisDuration: 1.3, yAxisDuration: 1.3)
-         pieChartView.frame = view.frame
-         pieChartView.center = view.center
-         pieChartView.backgroundColor = .white
-         view.addSubview(pieChartView)
-         self.output?.updateCharts(view: view, type: .pie)
-     }
- }
- */
-    
-    /**
-     
-     func grouppedKeys(array : [String]) -> [[String]]{
-         var groupedArray = [[String]]()
-         for i in stride(from: 0, to: array.count, by: 4) {
-             var group = [String]()
-             for j in i..<(i + 4) {
-                 if j < array.count {
-                     group.append(array[j])
-                 }
-             }
-             groupedArray.append(group)
-         }
-         return groupedArray
-     }
-     
-     func grouppedValues(array : [Double]) -> [[Double]]{
-         var groupedArray = [[Double]]()
-         for i in stride(from: 0, to: array.count, by: 4) {
-             var group = [Double]()
-             for j in i..<(i + 4) {
-                 if j < array.count {
-                     group.append(array[j])
-                 }
-             }
-             groupedArray.append(group)
-         }
-         return groupedArray
-     }
-     
-     */
-    
+    }    
 }

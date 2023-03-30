@@ -9,7 +9,14 @@ import Foundation
 import UIKit
 import Charts
 
-class ChartGenerator {
+protocol ChartGeneratorProtocol{
+    func createPieChart(percentArray : [String : Double], output: currencyViewModelOutput)
+    func createDailyBarChart(values : [DailyPortfolios], cdOutput : cdViewModelOutput)
+    func createWeekBarChart(values : [DailyPortfolios], cdOutput : cdViewModelOutput )
+    func createMonthlyBarChart(data : [String : Double], cdOutput : cdViewModelOutput)
+}
+
+class ChartGenerator : ChartGeneratorProtocol {
     
     
     func createPieChart(percentArray : [String : Double], output: currencyViewModelOutput){

@@ -12,11 +12,14 @@ final class cdViewModelTests: XCTestCase {
 
     private var sut : coreDataViewModel!
     private var cdServiceProtocol : MockCoreDataService!
+    private var calculate : MockCalculate!
+    private var chartGenerator : MockChartGenerator!
+    private var groupedData : MockGroupedData!
     
     override func setUpWithError() throws {
         // Put setup code here. This method is called before the invocation of each test method in the class.
         cdServiceProtocol = MockCoreDataService()
-        sut = coreDataViewModel(cdServiceProtocol: cdServiceProtocol)
+       
     }
 
     override func tearDownWithError() throws {
@@ -29,7 +32,7 @@ final class cdViewModelTests: XCTestCase {
         
         cdServiceProtocol.savePortfolioMockResult = .success(true)
         
-        sut.saveObject(portfolio: mockPortfolio)
+        sut.saveObject(portfolio: mockPortfolio, curr: 5)
         
         XCTAssertEqual(sut.retBool, true)
     }
@@ -45,6 +48,26 @@ final class cdViewModelTests: XCTestCase {
 }
 
 class MockCoreDataService : CoreDataServiceProtocol {
+    func savePortfolio(portfolio: portfolio, curr: Double, completion: @escaping (Result<Bool, Error>) -> Void) {
+        //
+    }
+    
+    func saveDailyTable(totalValue: Double) {
+        //
+    }
+    
+    func getDailyTable(completion: @escaping (Result<[DailyPortfolios], Error>) -> Void) {
+        //
+    }
+    
+    func getWeeklyTable(completion: @escaping (Result<[[DailyPortfolios]], Error>) -> Void) {
+        //
+    }
+    
+    func getMonthlyTable(completion: @escaping (Result<[String : [Double]], Error>) -> Void) {
+        //
+    }
+    
     func getPortfolioWithDayFilter(date: String, completion: @escaping (Result<[DailyPortfolios], Error>) -> Void) {
         //
     }

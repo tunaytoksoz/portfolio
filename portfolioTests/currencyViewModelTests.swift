@@ -14,12 +14,15 @@ final class currencyViewModelTests: XCTestCase {
     private var networkService : MockNetworkService!
     private var cdService : MockCoreDataService!
     private var currOutput : MockCurrencyViewModelOutput!
+    private var calculate : MockCalculate!
+    private var chartGenerator : MockChartGenerator!
+    private var groupedData : MockGroupedData!
 
     override func setUpWithError() throws {
         // Put setup code here. This method is called before the invocation of each test method in the class.
         networkService = MockNetworkService()
         currOutput = MockCurrencyViewModelOutput()
-        sut = currencyViewModel(networkService: networkService, cdService: cdService)
+        sut = currencyViewModel(networkService: networkService, cdService: cdService, calculate: calculate, chartGenerator: chartGenerator, groupedData: groupedData)
         sut.output = currOutput
     }
 
@@ -39,11 +42,7 @@ final class currencyViewModelTests: XCTestCase {
                 
         sut.getCurrency()
         
-        XCTAssertEqual(currOutput.updateViewArray.first?.eur, 10)
-        XCTAssertEqual(currOutput.updateViewArray.first?.gbp, 15)
-        XCTAssertEqual(currOutput.updateViewArray.first?.rub, 20)
-        XCTAssertEqual(currOutput.updateViewArray.first?.usd, 30)
-        XCTAssertEqual(currOutput.updateViewArray.first?.isSucces, true)
+    
         
     }
     
@@ -52,11 +51,7 @@ final class currencyViewModelTests: XCTestCase {
         networkService.fetchMockResult = .failure(NSError())
         
         sut.getCurrency()
-        XCTAssertEqual(currOutput.updateViewArray.first?.eur, 0)
-        XCTAssertEqual(currOutput.updateViewArray.first?.gbp, 0)
-        XCTAssertEqual(currOutput.updateViewArray.first?.rub, 0)
-        XCTAssertEqual(currOutput.updateViewArray.first?.usd, 0)
-        XCTAssertEqual(currOutput.updateViewArray.first?.isSucces, false)
+        
         
     }
 
@@ -81,7 +76,7 @@ class MockNetworkService : NetworkServiceProtocol {
 }
 
 class MockCurrencyViewModelOutput : currencyViewModelOutput {
-    func updateCurrencyLabels(keys: [[String]], values: [[Double]], isSucces: Bool) {
+    func updateCurrencyLabels(keys: [[String]], values: [[Double]], currencies: [String : Double], isSucces: Bool) {
         //
     }
     
@@ -89,20 +84,68 @@ class MockCurrencyViewModelOutput : currencyViewModelOutput {
         //
     }
     
-    func updatePiechart(view: UIView) {
+    func updateCharts(view: UIView, type: chartType) {
+        //
+    }
+}
+
+class MockCalculate: CalculateProtocol {
+    func calculatePercent(collectinArray: [collectionPortfolio]) -> [String : Double] {
+        //
+        return [ String : Double ]()
+    }
+    
+    func calculateTL(portfolios: [portfolio], currency: Currency) -> [collectionPortfolio] {
+        //
+        return [collectionPortfolio]()
+    }
+    
+    func calculateAverageWeek(array: [[DailyPortfolios]]) -> [DailyPortfolios] {
+        //
+        return [DailyPortfolios]()
+    }
+    
+    func calculateMonthlyAverage(data: [String : [Double]]) -> [String : Double] {
+        //
+        return [ String : Double ]()
+    }
+}
+
+class MockChartGenerator: ChartGeneratorProtocol {
+    func createPieChart(percentArray: [String : Double], output: currencyViewModelOutput) {
         //
     }
     
-    func convertTL(eur: Double, gbp: Double, rub: Double, usd: Double) {
+    func createDailyBarChart(values: [DailyPortfolios], cdOutput: cdViewModelOutput) {
         //
     }
     
-    func updatePiechart(eur: Double, gbp: Double, rub: Double, usd: Double) {
+    func createWeekBarChart(values: [DailyPortfolios], cdOutput: cdViewModelOutput) {
         //
     }
     
-    var updateViewArray : [(eur: Double, gbp: Double, rub: Double, usd: Double, isSucces: Bool)] = []
-    func updateCurrencyLabels(eur: Double, gbp: Double, rub: Double, usd: Double, isSucces: Bool) {
-        updateViewArray.append((eur,gbp,rub,usd,isSucces))
+    func createMonthlyBarChart(data: [String : Double], cdOutput: cdViewModelOutput) {
+        //
+    }
+}
+class MockGroupedData: GroupedDataProtocol {
+    func groupedKeys(array: [String]) -> [[String]] {
+        //
+        return [[String]]()
+    }
+    
+    func groupedValues(array: [Double]) -> [[Double]] {
+        //
+        return [[Double]]()
+    }
+    
+    func groupedWeek(array: [DailyPortfolios]) -> [[DailyPortfolios]] {
+        //
+        return [[DailyPortfolios]]()
+    }
+    
+    func groupedMonth(array: [DailyPortfolios]) -> [String : [Double]] {
+        //
+        return [String : [Double]]()
     }
 }

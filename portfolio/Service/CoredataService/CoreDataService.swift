@@ -25,8 +25,7 @@ class CoreDataService : CoreDataServiceProtocol {
     init(groupedData: GroupedData) {
         self.groupedData = groupedData
     }
-    
- 
+
     let appDelegate = UIApplication.shared.delegate as! AppDelegate
     
     func checkDailyTableDate(){
@@ -180,6 +179,7 @@ class CoreDataService : CoreDataServiceProtocol {
     }
     
     func getDailyTable(completion:  @escaping (Result<[DailyPortfolios],Error>) -> Void){
+        
         checkDailyTableDate()
         
         let context = appDelegate.persistentContainer.viewContext

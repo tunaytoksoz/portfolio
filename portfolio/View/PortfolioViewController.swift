@@ -82,15 +82,18 @@ class PortfolioViewController: UIViewController {
             let price = portfolioArray[indexPath.item].price
             
             AlertManager().showInputAlert(on: self, title: "\(name) Sat", subtitle: "Lütfen Miktar Girin", actionTitle: "Sat", actionHandler:  { text in
-                guard let text = Double(text ?? "0") else { return }
-                if text <= price {
-                    let succes = self.cdViewModel.saveObject(portfolio: portfolio(name: name, value: -text), curr: self.currencies[name] ?? 1)
-                    if succes {
-                        AlertManager().showBasicAlert(on: self, title: "Başarılı", message: "Satıldı.", prefer: .alert)
-                        self.getData()
+                if let text = text {
+                    guard let text = Double(text) else { return AlertManager().showBasicAlert(on: self, title: "Error", message: "error", prefer: .alert) }
+                    if text <= price {
+                        let succes = self.cdViewModel.saveObject(portfolio: portfolio(name: name, value: -text), curr: self.currencies[name] ?? 1)
+                        if succes {
+                            AlertManager().showBasicAlert(on: self, title: "Başarılı", message: "Satıldı.", prefer: .alert)
+                            self.getData()
+                        }
+                    } else {
+                        AlertManager().showBasicAlert(on: self, title: "Başarısız", message: "Döviz Tutarını Kontrol Edin!", prefer: .alert)
                     }
-                } else {
-                    AlertManager().showBasicAlert(on: self, title: "Başarısız", message: "Döviz Tutarını Kontrol Edin!", prefer: .alert)
+
                 }
             })
         }
