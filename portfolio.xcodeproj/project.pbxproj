@@ -147,16 +147,12 @@
 		661B913429ACB0C900648CB1 /* portfolio */ = {
 			isa = PBXGroup;
 			children = (
+				6650998329DC01E400202B21 /* Core */,
 				66452A2E29B719310073067E /* Service */,
 				66452A2929B4DB150073067E /* Support */,
 				661B916C29ACBBF300648CB1 /* Model */,
 				661B916B29ACBBE800648CB1 /* ViewModel */,
 				661B916A29ACBBDF00648CB1 /* View */,
-				661B913529ACB0C900648CB1 /* AppDelegate.swift */,
-				661B913729ACB0C900648CB1 /* SceneDelegate.swift */,
-				661B914129ACB0CB00648CB1 /* Assets.xcassets */,
-				661B914329ACB0CB00648CB1 /* LaunchScreen.storyboard */,
-				661B914629ACB0CB00648CB1 /* Info.plist */,
 				667CA61E29BB351600311D24 /* portfolio.xcdatamodeld */,
 			);
 			path = portfolio;
@@ -202,10 +198,8 @@
 		661B916A29ACBBDF00648CB1 /* View */ = {
 			isa = PBXGroup;
 			children = (
+				6650998229DC004200202B21 /* collectionViewCells */,
 				66452A2F29B75F810073067E /* PortfolioViewController.swift */,
-				66452A3129B76DA30073067E /* PortfolioCell.swift */,
-				66452A3529B7DD2B0073067E /* ChartCell.swift */,
-				667CA61429B931DC00311D24 /* CurrencyCell.swift */,
 				66B185F629C2FB6A00F2448B /* ExtensionViewController.swift */,
 			);
 			path = View;
@@ -252,6 +246,28 @@
 				661B916829ACBBC700648CB1 /* NetworkService */,
 			);
 			path = Service;
+			sourceTree = "<group>";
+		};
+		6650998229DC004200202B21 /* collectionViewCells */ = {
+			isa = PBXGroup;
+			children = (
+				667CA61429B931DC00311D24 /* CurrencyCell.swift */,
+				66452A3529B7DD2B0073067E /* ChartCell.swift */,
+				66452A3129B76DA30073067E /* PortfolioCell.swift */,
+			);
+			path = collectionViewCells;
+			sourceTree = "<group>";
+		};
+		6650998329DC01E400202B21 /* Core */ = {
+			isa = PBXGroup;
+			children = (
+				661B914629ACB0CB00648CB1 /* Info.plist */,
+				661B914129ACB0CB00648CB1 /* Assets.xcassets */,
+				661B913529ACB0C900648CB1 /* AppDelegate.swift */,
+				661B913729ACB0C900648CB1 /* SceneDelegate.swift */,
+				661B914329ACB0CB00648CB1 /* LaunchScreen.storyboard */,
+			);
+			path = Core;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -328,6 +344,7 @@
 					};
 					661B914A29ACB0CB00648CB1 = {
 						CreatedOnToolsVersion = 14.2;
+						LastSwiftMigration = 1430;
 						TestTargetID = 661B913129ACB0C900648CB1;
 					};
 					661B915429ACB0CB00648CB1 = {
@@ -587,7 +604,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = VW8GT67P82;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = portfolio/Info.plist;
+				INFOPLIST_FILE = portfolio/Core/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = "";
@@ -615,7 +632,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = VW8GT67P82;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = portfolio/Info.plist;
+				INFOPLIST_FILE = portfolio/Core/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = "";
@@ -639,15 +656,19 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = VW8GT67P82;
+				GCC_GENERATE_TEST_COVERAGE_FILES = NO;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 16.2;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.tunaytoksoz.portfolioTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_OBJC_BRIDGING_HEADER = "portfolioTests/portfolioTests-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/portfolio.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/portfolio";
@@ -659,15 +680,18 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = VW8GT67P82;
+				GCC_GENERATE_TEST_COVERAGE_FILES = NO;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 16.2;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.tunaytoksoz.portfolioTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_OBJC_BRIDGING_HEADER = "portfolioTests/portfolioTests-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/portfolio.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/portfolio";

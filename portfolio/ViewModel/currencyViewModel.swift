@@ -21,13 +21,12 @@ class currencyViewModel {
     
     private var baseUrl = "https://api.freecurrencyapi.com/v1/"
     
-    init(networkService: NetworkServiceProtocol, cdService: CoreDataServiceProtocol, calculate: CalculateProtocol, chartGenerator: ChartGeneratorProtocol, groupedData: GroupedDataProtocol, output: currencyViewModelOutput? = nil) {
+    init(networkService: NetworkServiceProtocol, cdService: CoreDataServiceProtocol, calculate: CalculateProtocol, chartGenerator: ChartGeneratorProtocol, groupedData: GroupedDataProtocol) {
         self.networkService = networkService
         self.cdService = cdService
         self.calculate = calculate
         self.chartGenerator = chartGenerator
         self.groupedData = groupedData
-        self.output = output
     }
     
     // MARK: - Currency Get
@@ -53,7 +52,8 @@ class currencyViewModel {
                         self.output?.updateCurrencyLabels(keys: [], values: [], currencies: [:], isSucces: false)
                     }
                 case .failure(let error):
-                    print(error)
+                    print(error.localizedDescription)
+                    self.output?.updateCurrencyLabels(keys: [], values: [], currencies: [:], isSucces: false)
                 }
             }
         }
@@ -75,7 +75,6 @@ class currencyViewModel {
                         self.cdService.getPortfolio { result in
                             switch result {
                             case .success(let portfolios):
-                                print(currency)
                                 collectionArray = self.calculate.calculateTL(portfolios: portfolios, currency: currency)
                                 
                                 for array in collectionArray {

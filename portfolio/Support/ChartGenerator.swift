@@ -133,7 +133,7 @@ class ChartGenerator : ChartGeneratorProtocol {
             for (index, value) in values.enumerated(){
                 let entry = BarChartDataEntry(x: Double(index), y: value.totalValue)
                 entries.append(entry)
-                var weekFirstDay = calendar.dateComponents([.calendar, .yearForWeekOfYear, .weekOfYear], from: value.day!).date
+                let weekFirstDay = calendar.dateComponents([.calendar, .yearForWeekOfYear, .weekOfYear], from: value.day!).date
                 days.append(dateFormatter.string(from: weekFirstDay!) + "\n" + dateFormatter.string(from: value.day!))
             }
             

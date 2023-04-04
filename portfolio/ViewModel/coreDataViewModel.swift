@@ -13,21 +13,20 @@ class coreDataViewModel {
     
     private let cdServiceProtocol : CoreDataServiceProtocol
     private let networkServiceProtocol : NetworkServiceProtocol
-    private let chartGenerator : ChartGenerator
-    private let groupedData : GroupedData
-    private let calculate : Calculate
+    private let chartGenerator : ChartGeneratorProtocol
+    private let groupedData : GroupedDataProtocol
+    private let calculate : CalculateProtocol
 
     weak var cdOutput : cdViewModelOutput?
     
     private var baseUrl = "https://api.freecurrencyapi.com/v1/"
     
-    init(cdServiceProtocol: CoreDataServiceProtocol, networkServiceProtocol: NetworkServiceProtocol, chartGenerator: ChartGenerator, groupedData: GroupedData, calculate: Calculate, cdOutput: cdViewModelOutput? = nil ) {
+    init(cdServiceProtocol: CoreDataServiceProtocol, networkServiceProtocol: NetworkServiceProtocol, chartGenerator: ChartGeneratorProtocol, groupedData: GroupedDataProtocol, calculate: CalculateProtocol) {
         self.cdServiceProtocol = cdServiceProtocol
         self.networkServiceProtocol = networkServiceProtocol
         self.chartGenerator = chartGenerator
         self.groupedData = groupedData
         self.calculate = calculate
-        self.cdOutput = cdOutput
     }
     
     var retBool = false
@@ -67,7 +66,6 @@ class coreDataViewModel {
         cdServiceProtocol.getWeeklyTable() { result in
             switch result {
             case .success(let success):
-                print(success)
                 let value = self.calculate.calculateAverageWeek(array: success)
                 self.chartGenerator.createWeekBarChart(values: value, cdOutput: self.cdOutput!)
             case .failure(let failure):

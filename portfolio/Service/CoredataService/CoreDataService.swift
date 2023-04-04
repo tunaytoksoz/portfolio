@@ -20,9 +20,9 @@ protocol CoreDataServiceProtocol {
 
 class CoreDataService : CoreDataServiceProtocol {
     
-    private let groupedData : GroupedData
+    private let groupedData : GroupedDataProtocol
     
-    init(groupedData: GroupedData) {
+    init(groupedData: GroupedDataProtocol) {
         self.groupedData = groupedData
     }
 

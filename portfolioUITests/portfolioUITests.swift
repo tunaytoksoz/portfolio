@@ -10,25 +10,77 @@ import XCTest
 final class portfolioUITests: XCTestCase {
 
     override func setUpWithError() throws {
-        // Put setup code here. This method is called before the invocation of each test method in the class.
-
-        // In UI tests it is usually best to stop immediately when a failure occurs.
         continueAfterFailure = false
-
-        // In UI tests it’s important to set the initial state - such as interface orientation - required for your tests before they run. The setUp method is a good place to do this.
     }
 
     override func tearDownWithError() throws {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
+        
     }
 
-    func testExample() throws {
+    func testBuyCurrency() throws {
         // UI tests must launch the application that they test.
         let app = XCUIApplication()
         app.launch()
-
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
+        
+        let addButton = app.navigationBars["Portfolio App"].buttons["Add"]
+        let selectedItem = app.scrollViews.otherElements.buttons["RUB"]
+        
+        let elementsQuery = app.alerts["RUB Al"].scrollViews.otherElements
+        
+        let textField = elementsQuery.collectionViews.textFields.firstMatch
+        
+        let buyButton = elementsQuery.buttons["Al"]
+        let alertOkButton = app.alerts["Başarılı"].scrollViews.otherElements.buttons["Tamam."]
+               
+        addButton.tap()
+        selectedItem.tap()
+        textField.tap()
+        textField.typeText("100")
+        buyButton.tap()
+        
+        XCTAssertTrue(alertOkButton.exists)
     }
+    
+    
+    func testSellCurrency() throws {
+        
+        let app = XCUIApplication()
+        app.launch()
+        
+        let addButton = app.navigationBars["Portfolio App"].buttons["Add"]
+        let selectedItem = app.scrollViews.otherElements.buttons["EUR"]
+        
+        let elementsQueryBuy = app.alerts["EUR Al"].scrollViews.otherElements
+        
+        let textField = elementsQueryBuy.collectionViews.textFields.firstMatch
+        
+        let buyButton = elementsQueryBuy.buttons["Al"]
+        let alertOkButton = app.alerts["Başarılı"].scrollViews.otherElements.buttons["Tamam."]
+               
+        let eurCell = app.collectionViews.cells.containing(.staticText, identifier:"EUR").element
+        
+        let elementsQuery = app.alerts["EUR Sat"].scrollViews.otherElements
+         let textFieldSell = elementsQuery.collectionViews.textFields.firstMatch
+        let sellButton = elementsQuery.buttons["Sat"]
+        let alertOkButtonSell = app.alerts["Başarılı"].scrollViews.otherElements.buttons["Tamam."]
+        
+        addButton.tap()
+        selectedItem.tap()
+        textField.tap()
+        textField.typeText("100")
+        buyButton.tap()
+        
+        eurCell.tap()
+        textFieldSell.tap()
+        textFieldSell.typeText("10")
+        sellButton.tap()
+        
+        XCTAssertTrue(alertOkButtonSell.exists)
+        
+    }
+    
+    
+    
 
     func testLaunchPerformance() throws {
         if #available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 7.0, *) {

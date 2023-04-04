@@ -68,7 +68,7 @@ class GroupedData : GroupedDataProtocol {
         for arr in array {
             if let arrDay = arr.day {
                 let monthString = dateFormatter.string(from: arrDay)
-                if var month = months[monthString]{
+                if months[monthString] != nil{
                     months[monthString]?.append(arr.totalValue)
                 } else {
                     months[monthString] = [arr.totalValue]

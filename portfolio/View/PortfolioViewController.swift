@@ -49,7 +49,8 @@ class PortfolioViewController: UIViewController {
         
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(didTapAdd))
         
-        //print(FileManager.default.urls(for: .documentDirectory, in: .userDomainMask))
+        
+       // print(FileManager.default.urls(for: .documentDirectory, in: .userDomainMask))
         //CoreDataService().fakeGenerator()
         
         getData()

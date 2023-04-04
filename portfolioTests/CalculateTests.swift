@@ -22,16 +22,26 @@ final class CalculateTests: XCTestCase {
     }
     
     func testCalcuteTLFunction() throws {
-        let portfolio = [portfolio(name: "EUR", value: 30.0),portfolio(name: "GBP", value: 25.0),portfolio(name: "PLN", value: 100.0)]
-        let currency = Currency(data: ["JPY": 6.922881, "CAD": 0.070827, "EUR": 1, "GBP": 0.5, "USD": 0.052214, "PHP": 2.833941, "PLN": 0.4, "RUB": 4.037482])
+        let portfolio = [portfolio(name: "EUR", value: 30.0),
+                         portfolio(name: "GBP", value: 25.0),
+                         portfolio(name: "PLN", value: 100.0)
+                        ]
+        let currency = Currency(data: ["EUR": 1,
+                                       "GBP":0.5,
+                                       "PLN": 0.4,
+                                      ])
         
         let result = sut.calculateTL(portfolios: portfolio, currency: currency)
         
-        XCTAssertEqual(result, [collectionPortfolio(name: "EUR", price: 30.0, priceTL: 30.0), collectionPortfolio(name: "GBP", price: 25.0, priceTL: 50.0), collectionPortfolio(name: "PLN", price: 100.0, priceTL: 250.0)])
+        XCTAssertEqual(result, [collectionPortfolio(name: "EUR", price: 30.0, priceTL: 30.0),
+                                collectionPortfolio(name: "GBP", price: 25.0, priceTL: 50.0),
+                                collectionPortfolio(name: "PLN", price: 100.0, priceTL: 250.0)])
     }
     
     func testCalculatePercentFunction() throws{
-        let arrayPortfolio = [collectionPortfolio(name: "EUR", price: 50, priceTL: 500), collectionPortfolio(name: "PLN", price: 40, priceTL: 100), collectionPortfolio(name: "GBP", price: 60, priceTL: 400)]
+        let arrayPortfolio = [collectionPortfolio(name: "EUR", price: 50, priceTL: 500),
+                              collectionPortfolio(name: "PLN", price: 40, priceTL: 100),
+                              collectionPortfolio(name: "GBP", price: 60, priceTL: 400)]
         
         let result = sut.calculatePercent(collectinArray: arrayPortfolio)
         
@@ -40,7 +50,9 @@ final class CalculateTests: XCTestCase {
     
     func testCalculateMonthlyAverageFunction() throws {
         
-        let data = [ "Mart" : [10.0,20.0,30.0], "Nisan" : [50.0,50.0,50.0], "Mayıs" : [100.0,60.0,80.0]]
+        let data = [ "Mart" : [10.0,20.0,30.0],
+                     "Nisan" : [50.0,50.0,50.0],
+                     "Mayıs" : [100.0,60.0,80.0]]
         
         let result = sut.calculateMonthlyAverage(data: data)
         
@@ -51,7 +63,13 @@ final class CalculateTests: XCTestCase {
         let df = DateFormatter()
         df.dateFormat = "yyyy-MM-dd hh:mm:ss Z"
         
-        let data = [[DailyPortfolios(totalValue: 10.0, day: df.date(from: "2023-02-26 21:00:00 +0000")), DailyPortfolios(totalValue: 20.0, day: df.date(from: "2023-02-27 21:00:00 +0000")), DailyPortfolios(totalValue: 30.0, day: df.date(from: "2023-02-28 21:00:00 +0000")), DailyPortfolios(totalValue: 40.0, day: df.date(from: "2023-03-01 21:00:00 +0000")), DailyPortfolios(totalValue: 50.0, day: df.date(from: "2023-03-02 21:00:00 +0000")), DailyPortfolios(totalValue: 60.0, day: df.date(from: "2023-03-03 21:00:00 +0000")), DailyPortfolios(totalValue: 70, day: df.date(from: "2023-03-04 21:00:00 +0000"))  ]]
+        let data = [[DailyPortfolios(totalValue: 10.0, day: df.date(from: "2023-02-26 21:00:00 +0000")),
+                     DailyPortfolios(totalValue: 20.0, day: df.date(from: "2023-02-27 21:00:00 +0000")),
+                     DailyPortfolios(totalValue: 30.0, day: df.date(from: "2023-02-28 21:00:00 +0000")),
+                     DailyPortfolios(totalValue: 40.0, day: df.date(from: "2023-03-01 21:00:00 +0000")),
+                     DailyPortfolios(totalValue: 50.0, day: df.date(from: "2023-03-02 21:00:00 +0000")),
+                     DailyPortfolios(totalValue: 60.0, day: df.date(from: "2023-03-03 21:00:00 +0000")),
+                     DailyPortfolios(totalValue: 70.0, day: df.date(from: "2023-03-04 21:00:00 +0000"))]]
         
         let result = sut.calculateAverageWeek(array: data)
         

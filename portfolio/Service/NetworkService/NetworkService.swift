@@ -15,12 +15,12 @@ class NetworkService : NetworkServiceProtocol{
     
     func getData(url : URL, completion: @escaping (Result<Data, Error>) -> Void){
         
-       let task = URLSession.shared.dataTask(with: url) { data, _, error in
-           if let data = data, error == nil {
-               completion(.success(data))
-           } else if let error = error {
-               completion(.failure(error))
-           }
+        let task = URLSession.shared.dataTask(with: url) { data, _, error in
+            if let data = data, error == nil {
+                completion(.success(data))
+            } else if let error = error {
+                completion(.failure(error))
+            }
         }
         task.resume()
     }
