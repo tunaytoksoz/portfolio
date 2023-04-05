@@ -19,8 +19,6 @@ class currencyViewModel {
     
     weak var output : currencyViewModelOutput?
     
-    private var baseUrl = "https://api.freecurrencyapi.com/v1/"
-    
     init(networkService: NetworkServiceProtocol, cdService: CoreDataServiceProtocol, calculate: CalculateProtocol, chartGenerator: ChartGeneratorProtocol, groupedData: GroupedDataProtocol) {
         self.networkService = networkService
         self.cdService = cdService
@@ -28,10 +26,27 @@ class currencyViewModel {
         self.chartGenerator = chartGenerator
         self.groupedData = groupedData
     }
+
+    func createURL() -> URL? {
+        
+        var component = URLComponents()
+        component.scheme = FreeCurrencyApi.scheme.rawValue
+        component.host = FreeCurrencyApi.host.rawValue
+        component.path = FreeCurrencyApi.path.rawValue
+        
+        let queryApikey = URLQueryItem(name: FreeCurrencyApi.apikeyName.rawValue, value: FreeCurrencyApi.apikey.rawValue)
+        let queryQuery = URLQueryItem(name: FreeCurrencyApi.queryName.rawValue, value: FreeCurrencyApi.query.rawValue)
+        let queryBaseCurrency = URLQueryItem(name: FreeCurrencyApi.baseCurrencyName.rawValue, value: FreeCurrencyApi.baseCurrency.rawValue)
+        
+        component.queryItems = [queryApikey,queryQuery,queryBaseCurrency]
+    
+        return component.url
+    }
+    
     
     // MARK: - Currency Get
     func getCurrency() {
-        if let url = URL(string: baseUrl + "latest?apikey=iMsPqn3Rhbamaq9BxTP0Wh6g7ENnwPd9Khxl1hSH&currencies=EUR%2CUSD%2CGBP%2CRUB%2CJPY%2CCAD%2CPHP%2CPLN&base_currency=TRY"){
+        if let url = createURL(){
             networkService.getData(url: url) { result in
                 
                 switch result{
@@ -66,7 +81,7 @@ class currencyViewModel {
         var collectionArray : [collectionPortfolio] = [collectionPortfolio]()
         var total : Double = 0
         
-        if let url = URL(string: baseUrl + "latest?apikey=iMsPqn3Rhbamaq9BxTP0Wh6g7ENnwPd9Khxl1hSH&currencies=EUR%2CUSD%2CGBP%2CRUB%2CJPY%2CCAD%2CPHP%2CPLN&base_currency=TRY"){
+        if let url = createURL(){
             networkService.getData(url: url) { result in
                 switch result {
                 case .success(let data):
@@ -101,8 +116,7 @@ class currencyViewModel {
     // MARK: - ChartSet
     
     func updatePieChart(){
-     
-        if let url = URL(string: baseUrl + "latest?apikey=iMsPqn3Rhbamaq9BxTP0Wh6g7ENnwPd9Khxl1hSH&currencies=EUR%2CUSD%2CGBP%2CRUB%2CJPY%2CCAD%2CPHP%2CPLN&base_currency=TRY"){
+        if let url = createURL(){
             networkService.getData(url: url) { result in
                 switch result {
                 case .success(let data):
@@ -127,5 +141,5 @@ class currencyViewModel {
                 }
             }
         }
-    }    
+    }
 }

@@ -19,8 +19,6 @@ class coreDataViewModel {
 
     weak var cdOutput : cdViewModelOutput?
     
-    private var baseUrl = "https://api.freecurrencyapi.com/v1/"
-    
     init(cdServiceProtocol: CoreDataServiceProtocol, networkServiceProtocol: NetworkServiceProtocol, chartGenerator: ChartGeneratorProtocol, groupedData: GroupedDataProtocol, calculate: CalculateProtocol) {
         self.cdServiceProtocol = cdServiceProtocol
         self.networkServiceProtocol = networkServiceProtocol
