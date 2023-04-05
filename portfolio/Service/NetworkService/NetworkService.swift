@@ -14,7 +14,6 @@ protocol NetworkServiceProtocol {
 class NetworkService : NetworkServiceProtocol{
     
     func getData(url : URL, completion: @escaping (Result<Data, Error>) -> Void){
-        
         let task = URLSession.shared.dataTask(with: url) { data, _, error in
             if let data = data, error == nil {
                 completion(.success(data))
@@ -27,8 +26,6 @@ class NetworkService : NetworkServiceProtocol{
     
 }
 
-
- 
  enum FreeCurrencyApi : String {
      
      case scheme = "https"

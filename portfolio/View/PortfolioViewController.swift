@@ -18,6 +18,7 @@ class PortfolioViewController: UIViewController {
     
     var portfolioArray : [collectionPortfolio] = [collectionPortfolio]()
     var chartArray : [UIView] = [UIView(),UIView(),UIView(),UIView()]
+    var transactions : [portfolio] = [portfolio]()
     
     var keys : [[String]] = [[String]]()
     var values : [[Double]] = [[Double]]()
@@ -39,6 +40,7 @@ class PortfolioViewController: UIViewController {
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         collectionView.frame = view.bounds
+        collectionView.backgroundColor = .systemBackground
     }
     
     override func viewDidLoad() {
@@ -61,6 +63,7 @@ class PortfolioViewController: UIViewController {
         collectionView.register(PortfolioCell.self, forCellWithReuseIdentifier: PortfolioCell.reuseIdentifier)
         collectionView.register(ChartCell.self, forCellWithReuseIdentifier: ChartCell.reuseIdentifier)
         collectionView.register(CurrencyCell.self, forCellWithReuseIdentifier: CurrencyCell.reuseIdentifier)
+        collectionView.register(TransactionsCell.self, forCellWithReuseIdentifier: TransactionsCell.reuseIdentifier)
         
         refreshControl.attributedTitle = NSAttributedString(string: "Pull to refresh")
         refreshControl.addTarget(self, action: #selector(self.refresh(_:)), for: .valueChanged)
@@ -74,6 +77,7 @@ class PortfolioViewController: UIViewController {
         cdViewModel.updateWeekChart()
         cdViewModel.updateWeekSummaryGraphic()
         cdViewModel.updateMonthlyGraphic()
+        cdViewModel.updateTransactionTable()
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
@@ -124,7 +128,6 @@ class PortfolioViewController: UIViewController {
                         AlertManager().showBasicAlert(on: self, title: "Error", message: "Geçersiz Değer", prefer: .alert)
                     }
                 }
-                
             })
         })
     }
@@ -138,6 +141,13 @@ class PortfolioViewController: UIViewController {
 }
 
 extension PortfolioViewController : currencyViewModelOutput, cdViewModelOutput{
+    func updateTransactionsTable(porfolio: [portfolio], isSucces: Bool) {
+        if isSucces{
+            self.transactions = porfolio
+            self.collectionView.reloadData()
+        }
+    }
+    
     
     func updateCharts(view: UIView, type: chartType) {
         DispatchQueue.main.async {

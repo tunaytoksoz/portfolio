@@ -35,13 +35,23 @@ extension PortfolioViewController : UICollectionViewDelegate, UICollectionViewDa
                 section.orthogonalScrollingBehavior = .groupPagingCentered
                 
                 return section
-            default:
+            case 2:
                 let item = NSCollectionLayoutItem(layoutSize: .init(widthDimension: .fractionalWidth(0.5), heightDimension: .absolute(150)))
                 item.contentInsets = NSDirectionalEdgeInsets(top: 15, leading: 15, bottom: 15, trailing: 15)
                 
                 let group = NSCollectionLayoutGroup.horizontal(layoutSize: .init(widthDimension: .fractionalWidth(1), heightDimension: .absolute(150)), subitems: [item])
                 
                 let section = NSCollectionLayoutSection(group: group)
+                
+                return section
+            default:
+                let item = NSCollectionLayoutItem(layoutSize: .init(widthDimension: .fractionalWidth(1), heightDimension: .absolute(60)))
+                item.contentInsets = NSDirectionalEdgeInsets(top: 2, leading: 15, bottom: 2, trailing: 15)
+                
+                let group = NSCollectionLayoutGroup.vertical(layoutSize: .init(widthDimension: .fractionalWidth(1), heightDimension: .absolute(60)), subitems: [item])
+                
+                let section = NSCollectionLayoutSection(group: group)
+                
                 
                 return section
             }
@@ -56,7 +66,7 @@ extension PortfolioViewController : UICollectionViewDelegate, UICollectionViewDa
     // MARK: - CollectionView Configure
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
-        3
+        4
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -77,11 +87,17 @@ extension PortfolioViewController : UICollectionViewDelegate, UICollectionViewDa
             }
             cell.configure(view: chartArray[indexPath.item])
             return cell
-        default:
+        case 2:
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PortfolioCell.reuseIdentifier, for: indexPath) as? PortfolioCell else {
                 return UICollectionViewCell()
             }
             cell.configure(collectionPortfolio: portfolioArray[indexPath.item])
+            return cell
+        default:
+            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: TransactionsCell.reuseIdentifier, for: indexPath) as? TransactionsCell else {
+                return UICollectionViewCell()
+            }
+            cell.configure(portfolio: transactions[indexPath.item])
             return cell
         }
     }
@@ -94,8 +110,10 @@ extension PortfolioViewController : UICollectionViewDelegate, UICollectionViewDa
             return chartArray.count
         case 2:
             return portfolioArray.count
+        case 3:
+            return transactions.count
         default:
-            return 1
+            return 0
         }
     }
 

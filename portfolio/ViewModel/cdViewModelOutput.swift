@@ -11,4 +11,5 @@ import UIKit
 
 protocol cdViewModelOutput : AnyObject {
     func updateCharts(view : UIView, type: chartType)
+    func updateTransactionsTable(porfolio : [portfolio], isSucces : Bool)
 }

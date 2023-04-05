@@ -55,6 +55,16 @@ final class cdViewModelTests: XCTestCase {
         XCTAssertEqual(result, false)
     }
     
+    func testUpdateTransactionTable() throws {
+        let mockPortfolios = [portfolio(name: "EUR", value: 35, createdTime: Date(), createdTimeString: "3/3/2023"),
+                             portfolio(name: "EUR", value: 35, createdTime: Date(), createdTimeString: "3/3/2023")
+                             ]
+        cdServiceProtocol.getTransactionsMockResult = .success(mockPortfolios)
+        sut.updateTransactionTable()
+        
+        XCTAssertTrue(cdOutput.isDoneTransaction!)
+    }
+    
     func testUpdateWeekChart_WhenReturnCoredataSucces() throws {
         
         let mockResults = [DailyPortfolios(totalValue: 10, day: Date()),
@@ -92,6 +102,14 @@ final class cdViewModelTests: XCTestCase {
 }
 
 class MockCoreDataService : CoreDataServiceProtocol {
+    
+    var getTransactionsMockResult : Result<[portfolio], Error>?
+    func getTransactions(completion: @escaping (Result<[portfolio], Error>) -> Void) {
+        if let result = getTransactionsMockResult {
+            completion(result)
+        }
+    }
+    
     
     var savePortfolioMockResult : Result<Bool, Error>?
     func savePortfolio(portfolio: portfolio, curr: Double, completion: @escaping (Result<Bool, Error>) -> Void) {
@@ -142,6 +160,11 @@ class MockCoreDataService : CoreDataServiceProtocol {
 
 
 class MockCdViewModelOutput : cdViewModelOutput {
+    var isDoneTransaction : Bool?
+    func updateTransactionsTable(porfolio: [portfolio], isSucces: Bool) {
+        isDoneTransaction = isSucces
+    }
+    
     var isDone = false
     func updateCharts(view: UIView, type: chartType) {
         isDone = true

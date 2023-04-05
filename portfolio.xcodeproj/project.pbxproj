@@ -40,6 +40,7 @@
 		669FD8F029D4641400E99148 /* CalculateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 669FD8EF29D4641400E99148 /* CalculateTests.swift */; };
 		669FD8F229D4643000E99148 /* GroupedDataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 669FD8F129D4643000E99148 /* GroupedDataTests.swift */; };
 		66B185F729C2FB6A00F2448B /* ExtensionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66B185F629C2FB6A00F2448B /* ExtensionViewController.swift */; };
+		66C51CDD29DE0DB600A2FD91 /* TransactionsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66C51CDC29DE0DB600A2FD91 /* TransactionsCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -96,6 +97,7 @@
 		669FD8EF29D4641400E99148 /* CalculateTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalculateTests.swift; sourceTree = "<group>"; };
 		669FD8F129D4643000E99148 /* GroupedDataTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupedDataTests.swift; sourceTree = "<group>"; };
 		66B185F629C2FB6A00F2448B /* ExtensionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionViewController.swift; sourceTree = "<group>"; };
+		66C51CDC29DE0DB600A2FD91 /* TransactionsCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionsCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -254,6 +256,7 @@
 				667CA61429B931DC00311D24 /* CurrencyCell.swift */,
 				66452A3529B7DD2B0073067E /* ChartCell.swift */,
 				66452A3129B76DA30073067E /* PortfolioCell.swift */,
+				66C51CDC29DE0DB600A2FD91 /* TransactionsCell.swift */,
 			);
 			path = collectionViewCells;
 			sourceTree = "<group>";
@@ -409,6 +412,7 @@
 			files = (
 				661B916E29ACBC6400648CB1 /* NetworkService.swift in Sources */,
 				661B917229ACC3E500648CB1 /* currencyViewModel.swift in Sources */,
+				66C51CDD29DE0DB600A2FD91 /* TransactionsCell.swift in Sources */,
 				66452A3229B76DA30073067E /* PortfolioCell.swift in Sources */,
 				667CA61929BA9B8500311D24 /* Portfolios.swift in Sources */,
 				661B917029ACBD2400648CB1 /* Currency.swift in Sources */,

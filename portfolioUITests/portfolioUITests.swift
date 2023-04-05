@@ -49,16 +49,12 @@ final class portfolioUITests: XCTestCase {
         
         let addButton = app.navigationBars["Portfolio App"].buttons["Add"]
         let selectedItem = app.scrollViews.otherElements.buttons["EUR"]
-        
         let elementsQueryBuy = app.alerts["EUR Al"].scrollViews.otherElements
-        
         let textField = elementsQueryBuy.collectionViews.textFields.firstMatch
-        
         let buyButton = elementsQueryBuy.buttons["Al"]
-        let alertOkButton = app.alerts["Başarılı"].scrollViews.otherElements.buttons["Tamam."]
-               
-        let eurCell = app.collectionViews.cells.containing(.staticText, identifier:"EUR").element
         
+        
+        let eurCell = app.collectionViews.cells.containing(.staticText, identifier:"EUR").element
         let elementsQuery = app.alerts["EUR Sat"].scrollViews.otherElements
          let textFieldSell = elementsQuery.collectionViews.textFields.firstMatch
         let sellButton = elementsQuery.buttons["Sat"]

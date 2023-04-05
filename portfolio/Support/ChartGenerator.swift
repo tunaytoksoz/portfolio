@@ -31,7 +31,7 @@ class ChartGenerator : ChartGeneratorProtocol {
                 entryPortfolios.append(entry)
             }
  
-            let dataSet = PieChartDataSet(entries: entryPortfolios)
+            let dataSet = PieChartDataSet(entries: entryPortfolios, label: "My Portfolio")
             dataSet.colors = ChartColorTemplates.colorful()
             
             let data = PieChartData(dataSet: dataSet)
@@ -54,7 +54,6 @@ class ChartGenerator : ChartGeneratorProtocol {
             pieChartView.animate(xAxisDuration: 1.3, yAxisDuration: 1.3)
             pieChartView.frame = view.frame
             pieChartView.center = view.center
-            pieChartView.backgroundColor = .white
             view.addSubview(pieChartView)
             output.updateCharts(view: view, type: .pie)
         }
@@ -108,7 +107,6 @@ class ChartGenerator : ChartGeneratorProtocol {
             chartView.animate(xAxisDuration: 2.0, yAxisDuration: 2.0)
             chartView.frame = view.frame
             chartView.center = view.center
-            chartView.backgroundColor = .white
             chartView.isUserInteractionEnabled = false
             
             view.addSubview(chartView)
@@ -159,7 +157,6 @@ class ChartGenerator : ChartGeneratorProtocol {
             chartView.animate(xAxisDuration: 2.0, yAxisDuration: 2.0)
             chartView.frame = view.frame
             chartView.center = view.center
-            chartView.backgroundColor = .white
             chartView.isUserInteractionEnabled = false
             
             view.addSubview(chartView)
@@ -213,7 +210,6 @@ class ChartGenerator : ChartGeneratorProtocol {
             chartView.animate(xAxisDuration: 2.0, yAxisDuration: 2.0)
             chartView.frame = view.frame
             chartView.center = view.center
-            chartView.backgroundColor = .white
             chartView.isUserInteractionEnabled = false
             
             view.addSubview(chartView)

@@ -84,4 +84,16 @@ class coreDataViewModel {
         }
     }
     
+    func updateTransactionTable(){
+        cdServiceProtocol.getTransactions { result in
+            switch result {
+            case .success(let portfolio):
+                self.cdOutput?.updateTransactionsTable(porfolio: portfolio, isSucces: true)
+            case .failure(let error):
+                print(error.localizedDescription)
+                self.cdOutput?.updateTransactionsTable(porfolio: [], isSucces: false)
+            }
+        }
+    }
+    
 }

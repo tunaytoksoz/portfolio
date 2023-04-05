@@ -16,6 +16,7 @@ protocol CoreDataServiceProtocol {
     func getDailyTable(completion:  @escaping (Result<[DailyPortfolios],Error>) -> Void)
     func getWeeklyTable(completion: @escaping (Result<[[DailyPortfolios]],Error>) -> Void)
     func getMonthlyTable(completion: @escaping (Result<[String : [Double]],Error>) -> Void)
+    func getTransactions(completion:  @escaping (Result<[portfolio],Error>) -> Void)
 }
 
 class CoreDataService : CoreDataServiceProtocol {
@@ -125,6 +126,7 @@ class CoreDataService : CoreDataServiceProtocol {
             port.createdTime = Date()
             port.createdTimeStr = Date().formatted(date: .numeric, time: .standard)
             port.totalValue = total + portfolio.value
+            port.currency = 1 / curr
         } else {
             let port = Portfolio(context: context)
             port.name = portfolio.name
@@ -132,6 +134,7 @@ class CoreDataService : CoreDataServiceProtocol {
             port.createdTime = Date()
             port.createdTimeStr = Date().formatted(date: .numeric, time: .standard)
             port.totalValue = portfolio.value
+            port.currency = 1 / curr
         }
         
         do {
@@ -170,6 +173,30 @@ class CoreDataService : CoreDataServiceProtocol {
             }
             UserDefaults.standard.synchronize()
            
+            completion(.success(portArray))
+            
+        } catch let error as NSError {
+            print(error.localizedDescription)
+            completion(.failure(error))
+        }
+    }
+    
+    
+    func getTransactions(completion:  @escaping (Result<[portfolio],Error>) -> Void){
+        var portArray : [portfolio] = [portfolio]()
+        
+        let context = appDelegate.persistentContainer.viewContext
+        let fetchRequest : NSFetchRequest<Portfolio> = Portfolio.fetchRequest()
+        fetchRequest.fetchLimit = 15
+        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "createdTime", ascending: false)]
+        
+        do {
+            let portfolios = try context.fetch(fetchRequest)
+            
+            for port in portfolios {
+                portArray.append(portfolio(name: port.name ?? "", value: port.value, createdTime: port.createdTime, createdTimeString: port.createdTimeStr, totalValue: port.totalValue, currency: port.currency))
+            }
+            
             completion(.success(portArray))
             
         } catch let error as NSError {
