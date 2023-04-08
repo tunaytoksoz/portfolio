@@ -7,7 +7,7 @@
 
 import UIKit
 
-class TransactionsCell: UICollectionViewCell {
+class TransactionsCell: UICollectionViewCell, SelfConfiguringCell {
     
     static var reuseIdentifier: String = "TransactionsCell"
     
@@ -74,7 +74,7 @@ class TransactionsCell: UICollectionViewCell {
            fatalError("init(coder:) has not been implemented")
        }
        
-    func configure(portfolio : portfolio) {
+    func configure(portfolio : Portfolios) {
         let df = DateFormatter()
         df.dateFormat = "d MMM yyyy HH:mm:ss"
         

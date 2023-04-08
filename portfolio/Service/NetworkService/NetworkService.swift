@@ -23,19 +23,4 @@ class NetworkService : NetworkServiceProtocol{
         }
         task.resume()
     }
-    
 }
-
- enum FreeCurrencyApi : String {
-     
-     case scheme = "https"
-     case host = "api.freecurrencyapi.com"
-     case path = "/v1/latest"
-     case apikeyName = "apikey"
-     case apikey = "iMsPqn3Rhbamaq9BxTP0Wh6g7ENnwPd9Khxl1hSH"
-     case queryName = "currencies"
-     case query = "EUR,USD,GBP,RUB,JPY,CAD,PHP,PLN"
-     case baseCurrencyName = "base_currency"
-     case baseCurrency = "TRY"
-     
- }

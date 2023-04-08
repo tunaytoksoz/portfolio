@@ -22,14 +22,14 @@ final class CalculateTests: XCTestCase {
     }
     
     func testCalcuteTLFunction() throws {
-        let portfolio = [portfolio(name: "EUR", value: 30.0),
-                         portfolio(name: "GBP", value: 25.0),
-                         portfolio(name: "PLN", value: 100.0)
+        let portfolio = [Portfolios(name: "EUR", value: 30.0),
+                         Portfolios(name: "GBP", value: 25.0),
+                         Portfolios(name: "PLN", value: 100.0)
                         ]
-        let currency = Currency(data: ["EUR": 1,
-                                       "GBP":0.5,
-                                       "PLN": 0.4,
-                                      ])
+        let currency =  ["EUR": 1,
+                        "GBP":0.5,
+                        "PLN": 0.4,
+                        ]
         
         let result = sut.calculateTL(portfolios: portfolio, currency: currency)
         
@@ -38,7 +38,7 @@ final class CalculateTests: XCTestCase {
                                 collectionPortfolio(name: "PLN", price: 100.0, priceTL: 250.0)])
     }
     
-    func testCalculatePercentFunction() throws{
+    func testCalculatePercentFunction() throws {
         let arrayPortfolio = [collectionPortfolio(name: "EUR", price: 50, priceTL: 500),
                               collectionPortfolio(name: "PLN", price: 40, priceTL: 100),
                               collectionPortfolio(name: "GBP", price: 60, priceTL: 400)]

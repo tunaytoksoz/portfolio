@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct portfolio : Codable, Hashable {
+struct Portfolios : Codable, Hashable {
     var name : String
     var value : Double
     var createdTime : Date?

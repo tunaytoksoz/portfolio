@@ -43,7 +43,6 @@ final class portfolioUITests: XCTestCase {
     
     
     func testSellCurrency() throws {
-        
         let app = XCUIApplication()
         app.launch()
         
@@ -52,9 +51,10 @@ final class portfolioUITests: XCTestCase {
         let elementsQueryBuy = app.alerts["EUR Al"].scrollViews.otherElements
         let textField = elementsQueryBuy.collectionViews.textFields.firstMatch
         let buyButton = elementsQueryBuy.buttons["Al"]
+        let alertOkButton = app.alerts["Başarılı"].scrollViews.otherElements.buttons["Tamam."]
         
         
-        let eurCell = app.collectionViews.cells.containing(.staticText, identifier:"EUR").element
+        let eurCell = app.collectionViews.cells.containing(.staticText, identifier:"EUR").element.firstMatch
         let elementsQuery = app.alerts["EUR Sat"].scrollViews.otherElements
          let textFieldSell = elementsQuery.collectionViews.textFields.firstMatch
         let sellButton = elementsQuery.buttons["Sat"]
@@ -65,6 +65,7 @@ final class portfolioUITests: XCTestCase {
         textField.tap()
         textField.typeText("100")
         buyButton.tap()
+        alertOkButton.tap()
         
         eurCell.tap()
         textFieldSell.tap()
@@ -72,7 +73,7 @@ final class portfolioUITests: XCTestCase {
         sellButton.tap()
         
         XCTAssertTrue(alertOkButtonSell.exists)
-        
+
     }
     
     
@@ -80,7 +81,6 @@ final class portfolioUITests: XCTestCase {
 
     func testLaunchPerformance() throws {
         if #available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 7.0, *) {
-            // This measures how long it takes to launch your application.
             measure(metrics: [XCTApplicationLaunchMetric()]) {
                 XCUIApplication().launch()
             }

@@ -9,12 +9,24 @@ import Foundation
 
 protocol CalculateProtocol {
     func calculatePercent(collectinArray : [collectionPortfolio] ) -> [String : Double]
-    func calculateTL(portfolios : [portfolio], currency : Currency) -> [collectionPortfolio]
+    func calculateTL(portfolios : [Portfolios], currency : [String : Double]) -> [collectionPortfolio]
     func calculateAverageWeek(array : [[DailyPortfolios]]) -> [DailyPortfolios]
     func calculateMonthlyAverage(data : [String : [Double]]) -> [String : Double]
 }
 
 class Calculate : CalculateProtocol {
+    
+    func calculateTL(portfolios: [Portfolios], currency: [String : Double]) -> [collectionPortfolio] {
+        var collectionArray : [collectionPortfolio] = [collectionPortfolio]()
+        for port in portfolios{
+            collectionArray.append(collectionPortfolio(name: port.name, price: port.value, priceTL: port.value / (currency[port.name] ?? 1)))
+        }
+        
+        collectionArray.removeAll { $0.price == 0.0 }
+        
+        return collectionArray
+    }
+    
     
     func calculatePercent(collectinArray : [collectionPortfolio] ) -> [String : Double] {
         var total = 0.0
@@ -28,17 +40,6 @@ class Calculate : CalculateProtocol {
         }
         
         return percentArray
-    }
-    
-    func calculateTL(portfolios : [portfolio], currency : Currency) -> [collectionPortfolio] {
-        var collectionArray : [collectionPortfolio] = [collectionPortfolio]()
-        for port in portfolios{
-            collectionArray.append(collectionPortfolio(name: port.name, price: port.value, priceTL: port.value / (currency.data[port.name] ?? 1)))
-        }
-        
-        collectionArray.removeAll { $0.price == 0.0 }
-        
-        return collectionArray
     }
     
     func calculateAverageWeek(array : [[DailyPortfolios]]) -> [DailyPortfolios] {

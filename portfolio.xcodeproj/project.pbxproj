@@ -16,14 +16,8 @@
 		661B915C29ACB0CB00648CB1 /* portfolioUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 661B915B29ACB0CB00648CB1 /* portfolioUITestsLaunchTests.swift */; };
 		661B916E29ACBC6400648CB1 /* NetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 661B916D29ACBC6400648CB1 /* NetworkService.swift */; };
 		661B917029ACBD2400648CB1 /* Currency.swift in Sources */ = {isa = PBXBuildFile; fileRef = 661B916F29ACBD2400648CB1 /* Currency.swift */; };
-		661B917229ACC3E500648CB1 /* currencyViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 661B917129ACC3E500648CB1 /* currencyViewModel.swift */; };
 		661B917429AD324C00648CB1 /* CoreDataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 661B917329AD324C00648CB1 /* CoreDataService.swift */; };
 		661B917C29ADFF7800648CB1 /* Charts in Frameworks */ = {isa = PBXBuildFile; productRef = 661B917B29ADFF7800648CB1 /* Charts */; };
-		661B917E29AE118C00648CB1 /* coreDataViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 661B917D29AE118C00648CB1 /* coreDataViewModel.swift */; };
-		661B918029AFB4A300648CB1 /* currencyViewModelOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 661B917F29AFB4A300648CB1 /* currencyViewModelOutput.swift */; };
-		661B918229AFC56D00648CB1 /* cdViewModelOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 661B918129AFC56D00648CB1 /* cdViewModelOutput.swift */; };
-		661B918429B0BF3900648CB1 /* currencyViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 661B918329B0BF3900648CB1 /* currencyViewModelTests.swift */; };
-		661B918629B0CA6100648CB1 /* cdViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 661B918529B0CA6100648CB1 /* cdViewModelTests.swift */; };
 		66452A2D29B5D4600073067E /* AlertManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66452A2C29B5D4600073067E /* AlertManager.swift */; };
 		66452A3029B75F810073067E /* PortfolioViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66452A2F29B75F810073067E /* PortfolioViewController.swift */; };
 		66452A3229B76DA30073067E /* PortfolioCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66452A3129B76DA30073067E /* PortfolioCell.swift */; };
@@ -39,8 +33,14 @@
 		669FD8EE29D43D8700E99148 /* GroupedData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 669FD8ED29D43D8700E99148 /* GroupedData.swift */; };
 		669FD8F029D4641400E99148 /* CalculateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 669FD8EF29D4641400E99148 /* CalculateTests.swift */; };
 		669FD8F229D4643000E99148 /* GroupedDataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 669FD8F129D4643000E99148 /* GroupedDataTests.swift */; };
-		66B185F729C2FB6A00F2448B /* ExtensionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66B185F629C2FB6A00F2448B /* ExtensionViewController.swift */; };
+		66B185F729C2FB6A00F2448B /* PortfolioViewController-Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66B185F629C2FB6A00F2448B /* PortfolioViewController-Extension.swift */; };
 		66C51CDD29DE0DB600A2FD91 /* TransactionsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66C51CDC29DE0DB600A2FD91 /* TransactionsCell.swift */; };
+		66C51CDF29DEA50200A2FD91 /* SectionHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66C51CDE29DEA50200A2FD91 /* SectionHeaderView.swift */; };
+		66C51CE229E0C7B700A2FD91 /* NetworkComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66C51CE129E0C7B700A2FD91 /* NetworkComponent.swift */; };
+		66C51CE429E0CBD400A2FD91 /* SectionGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66C51CE329E0CBD400A2FD91 /* SectionGenerator.swift */; };
+		66C51CE629E1850500A2FD91 /* PortfolioViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66C51CE529E1850500A2FD91 /* PortfolioViewModel.swift */; };
+		66C51CE829E1859900A2FD91 /* PortfolioViewControllerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66C51CE729E1859900A2FD91 /* PortfolioViewControllerDelegate.swift */; };
+		66C51CEA29E1F46F00A2FD91 /* PortfolioViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66C51CE929E1F46F00A2FD91 /* PortfolioViewModelTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -74,13 +74,7 @@
 		661B915B29ACB0CB00648CB1 /* portfolioUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = portfolioUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		661B916D29ACBC6400648CB1 /* NetworkService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkService.swift; sourceTree = "<group>"; };
 		661B916F29ACBD2400648CB1 /* Currency.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Currency.swift; sourceTree = "<group>"; };
-		661B917129ACC3E500648CB1 /* currencyViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = currencyViewModel.swift; sourceTree = "<group>"; };
 		661B917329AD324C00648CB1 /* CoreDataService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataService.swift; sourceTree = "<group>"; };
-		661B917D29AE118C00648CB1 /* coreDataViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = coreDataViewModel.swift; sourceTree = "<group>"; };
-		661B917F29AFB4A300648CB1 /* currencyViewModelOutput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = currencyViewModelOutput.swift; sourceTree = "<group>"; };
-		661B918129AFC56D00648CB1 /* cdViewModelOutput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = cdViewModelOutput.swift; sourceTree = "<group>"; };
-		661B918329B0BF3900648CB1 /* currencyViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = currencyViewModelTests.swift; sourceTree = "<group>"; };
-		661B918529B0CA6100648CB1 /* cdViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = cdViewModelTests.swift; sourceTree = "<group>"; };
 		66452A2C29B5D4600073067E /* AlertManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertManager.swift; sourceTree = "<group>"; };
 		66452A2F29B75F810073067E /* PortfolioViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PortfolioViewController.swift; sourceTree = "<group>"; };
 		66452A3129B76DA30073067E /* PortfolioCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PortfolioCell.swift; sourceTree = "<group>"; };
@@ -96,8 +90,14 @@
 		669FD8ED29D43D8700E99148 /* GroupedData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupedData.swift; sourceTree = "<group>"; };
 		669FD8EF29D4641400E99148 /* CalculateTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalculateTests.swift; sourceTree = "<group>"; };
 		669FD8F129D4643000E99148 /* GroupedDataTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupedDataTests.swift; sourceTree = "<group>"; };
-		66B185F629C2FB6A00F2448B /* ExtensionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionViewController.swift; sourceTree = "<group>"; };
+		66B185F629C2FB6A00F2448B /* PortfolioViewController-Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PortfolioViewController-Extension.swift"; sourceTree = "<group>"; };
 		66C51CDC29DE0DB600A2FD91 /* TransactionsCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionsCell.swift; sourceTree = "<group>"; };
+		66C51CDE29DEA50200A2FD91 /* SectionHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SectionHeaderView.swift; sourceTree = "<group>"; };
+		66C51CE129E0C7B700A2FD91 /* NetworkComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkComponent.swift; sourceTree = "<group>"; };
+		66C51CE329E0CBD400A2FD91 /* SectionGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SectionGenerator.swift; sourceTree = "<group>"; };
+		66C51CE529E1850500A2FD91 /* PortfolioViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PortfolioViewModel.swift; sourceTree = "<group>"; };
+		66C51CE729E1859900A2FD91 /* PortfolioViewControllerDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PortfolioViewControllerDelegate.swift; sourceTree = "<group>"; };
+		66C51CE929E1F46F00A2FD91 /* PortfolioViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PortfolioViewModelTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -164,10 +164,9 @@
 			isa = PBXGroup;
 			children = (
 				661B914F29ACB0CB00648CB1 /* portfolioTests.swift */,
-				661B918329B0BF3900648CB1 /* currencyViewModelTests.swift */,
-				661B918529B0CA6100648CB1 /* cdViewModelTests.swift */,
 				669FD8EF29D4641400E99148 /* CalculateTests.swift */,
 				669FD8F129D4643000E99148 /* GroupedDataTests.swift */,
+				66C51CE929E1F46F00A2FD91 /* PortfolioViewModelTests.swift */,
 			);
 			path = portfolioTests;
 			sourceTree = "<group>";
@@ -200,9 +199,10 @@
 		661B916A29ACBBDF00648CB1 /* View */ = {
 			isa = PBXGroup;
 			children = (
-				6650998229DC004200202B21 /* collectionViewCells */,
+				66C51CE029DEF71700A2FD91 /* Header */,
+				6650998229DC004200202B21 /* CollectionViewCells */,
 				66452A2F29B75F810073067E /* PortfolioViewController.swift */,
-				66B185F629C2FB6A00F2448B /* ExtensionViewController.swift */,
+				66B185F629C2FB6A00F2448B /* PortfolioViewController-Extension.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -210,10 +210,8 @@
 		661B916B29ACBBE800648CB1 /* ViewModel */ = {
 			isa = PBXGroup;
 			children = (
-				661B917129ACC3E500648CB1 /* currencyViewModel.swift */,
-				661B917D29AE118C00648CB1 /* coreDataViewModel.swift */,
-				661B918129AFC56D00648CB1 /* cdViewModelOutput.swift */,
-				661B917F29AFB4A300648CB1 /* currencyViewModelOutput.swift */,
+				66C51CE529E1850500A2FD91 /* PortfolioViewModel.swift */,
+				66C51CE729E1859900A2FD91 /* PortfolioViewControllerDelegate.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -225,6 +223,7 @@
 				66452A3329B7D3E90073067E /* CollectionPortfolio.swift */,
 				667CA61829BA9B8500311D24 /* Portfolios.swift */,
 				667CA62329BF49FE00311D24 /* DailyPortfolio.swift */,
+				66C51CE129E0C7B700A2FD91 /* NetworkComponent.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -237,6 +236,7 @@
 				669FD8E929D43B6300E99148 /* ChartGenerator.swift */,
 				669FD8EB29D43C0C00E99148 /* Calculate.swift */,
 				669FD8ED29D43D8700E99148 /* GroupedData.swift */,
+				66C51CE329E0CBD400A2FD91 /* SectionGenerator.swift */,
 			);
 			path = Support;
 			sourceTree = "<group>";
@@ -250,7 +250,7 @@
 			path = Service;
 			sourceTree = "<group>";
 		};
-		6650998229DC004200202B21 /* collectionViewCells */ = {
+		6650998229DC004200202B21 /* CollectionViewCells */ = {
 			isa = PBXGroup;
 			children = (
 				667CA61429B931DC00311D24 /* CurrencyCell.swift */,
@@ -258,7 +258,7 @@
 				66452A3129B76DA30073067E /* PortfolioCell.swift */,
 				66C51CDC29DE0DB600A2FD91 /* TransactionsCell.swift */,
 			);
-			path = collectionViewCells;
+			path = CollectionViewCells;
 			sourceTree = "<group>";
 		};
 		6650998329DC01E400202B21 /* Core */ = {
@@ -271,6 +271,14 @@
 				661B914329ACB0CB00648CB1 /* LaunchScreen.storyboard */,
 			);
 			path = Core;
+			sourceTree = "<group>";
+		};
+		66C51CE029DEF71700A2FD91 /* Header */ = {
+			isa = PBXGroup;
+			children = (
+				66C51CDE29DEA50200A2FD91 /* SectionHeaderView.swift */,
+			);
+			path = Header;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -411,7 +419,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				661B916E29ACBC6400648CB1 /* NetworkService.swift in Sources */,
-				661B917229ACC3E500648CB1 /* currencyViewModel.swift in Sources */,
 				66C51CDD29DE0DB600A2FD91 /* TransactionsCell.swift in Sources */,
 				66452A3229B76DA30073067E /* PortfolioCell.swift in Sources */,
 				667CA61929BA9B8500311D24 /* Portfolios.swift in Sources */,
@@ -420,20 +427,22 @@
 				667CA61529B931DC00311D24 /* CurrencyCell.swift in Sources */,
 				66452A3029B75F810073067E /* PortfolioViewController.swift in Sources */,
 				66452A2D29B5D4600073067E /* AlertManager.swift in Sources */,
-				661B918029AFB4A300648CB1 /* currencyViewModelOutput.swift in Sources */,
+				66C51CE429E0CBD400A2FD91 /* SectionGenerator.swift in Sources */,
 				661B917429AD324C00648CB1 /* CoreDataService.swift in Sources */,
 				669FD8EA29D43B6300E99148 /* ChartGenerator.swift in Sources */,
-				661B917E29AE118C00648CB1 /* coreDataViewModel.swift in Sources */,
 				667CA62029BB351600311D24 /* portfolio.xcdatamodeld in Sources */,
 				66452A3629B7DD2B0073067E /* ChartCell.swift in Sources */,
+				66C51CE629E1850500A2FD91 /* PortfolioViewModel.swift in Sources */,
 				661B913629ACB0C900648CB1 /* AppDelegate.swift in Sources */,
-				661B918229AFC56D00648CB1 /* cdViewModelOutput.swift in Sources */,
-				66B185F729C2FB6A00F2448B /* ExtensionViewController.swift in Sources */,
+				66B185F729C2FB6A00F2448B /* PortfolioViewController-Extension.swift in Sources */,
 				669FD8EC29D43C0C00E99148 /* Calculate.swift in Sources */,
+				66C51CE829E1859900A2FD91 /* PortfolioViewControllerDelegate.swift in Sources */,
 				669FD8EE29D43D8700E99148 /* GroupedData.swift in Sources */,
 				66452A3429B7D3E90073067E /* CollectionPortfolio.swift in Sources */,
 				667CA62429BF49FE00311D24 /* DailyPortfolio.swift in Sources */,
 				661B913829ACB0C900648CB1 /* SceneDelegate.swift in Sources */,
+				66C51CE229E0C7B700A2FD91 /* NetworkComponent.swift in Sources */,
+				66C51CDF29DEA50200A2FD91 /* SectionHeaderView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -443,8 +452,7 @@
 			files = (
 				669FD8F029D4641400E99148 /* CalculateTests.swift in Sources */,
 				661B915029ACB0CB00648CB1 /* portfolioTests.swift in Sources */,
-				661B918629B0CA6100648CB1 /* cdViewModelTests.swift in Sources */,
-				661B918429B0BF3900648CB1 /* currencyViewModelTests.swift in Sources */,
+				66C51CEA29E1F46F00A2FD91 /* PortfolioViewModelTests.swift in Sources */,
 				669FD8F229D4643000E99148 /* GroupedDataTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

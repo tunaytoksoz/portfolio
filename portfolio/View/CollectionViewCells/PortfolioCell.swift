@@ -27,7 +27,7 @@ class PortfolioCell: UICollectionViewCell, SelfConfiguringCell {
         super.layoutSubviews()
     }
     
-    private let Namelabel: UILabel = {
+    private let namelabel: UILabel = {
         let label = UILabel()
         label.textColor = .white
         label.textAlignment = .center
@@ -36,7 +36,7 @@ class PortfolioCell: UICollectionViewCell, SelfConfiguringCell {
         return label
     }()
     
-    private let PriceLabel: UILabel = {
+    private let priceLabel: UILabel = {
         let label = UILabel()
         label.textColor = .white
         label.textAlignment = .center
@@ -45,7 +45,7 @@ class PortfolioCell: UICollectionViewCell, SelfConfiguringCell {
         return label
     }()
     
-    private let PriceTLlabel: UILabel = {
+    private let priceTLlabel: UILabel = {
         let label = UILabel()
         label.textColor = .white
         label.textAlignment = .center
@@ -60,24 +60,24 @@ class PortfolioCell: UICollectionViewCell, SelfConfiguringCell {
         layer.cornerRadius = 8
         clipsToBounds = true
         
-        addSubview(Namelabel)
-        addSubview(PriceLabel)
-        addSubview(PriceTLlabel)
+        addSubview(namelabel)
+        addSubview(priceLabel)
+        addSubview(priceTLlabel)
         
-        Namelabel.translatesAutoresizingMaskIntoConstraints = false
-        PriceLabel.translatesAutoresizingMaskIntoConstraints = false
-        PriceTLlabel.translatesAutoresizingMaskIntoConstraints = false
+        namelabel.translatesAutoresizingMaskIntoConstraints = false
+        priceLabel.translatesAutoresizingMaskIntoConstraints = false
+        priceTLlabel.translatesAutoresizingMaskIntoConstraints = false
                
                
                NSLayoutConstraint.activate([
-                    Namelabel.centerXAnchor.constraint(equalTo: centerXAnchor),
-                    Namelabel.bottomAnchor.constraint(equalTo: PriceLabel.topAnchor,constant: -10),
+                    namelabel.centerXAnchor.constraint(equalTo: centerXAnchor),
+                    namelabel.bottomAnchor.constraint(equalTo: priceLabel.topAnchor,constant: -10),
                     
-                    PriceLabel.centerXAnchor.constraint(equalTo: centerXAnchor),
-                    PriceLabel.centerYAnchor.constraint(equalTo: centerYAnchor),
+                    priceLabel.centerXAnchor.constraint(equalTo: centerXAnchor),
+                    priceLabel.centerYAnchor.constraint(equalTo: centerYAnchor),
                     
-                    PriceTLlabel.topAnchor.constraint(equalTo: PriceLabel.bottomAnchor,constant: 10),
-                    PriceTLlabel.centerXAnchor.constraint(equalTo: centerXAnchor),
+                    priceTLlabel.topAnchor.constraint(equalTo: priceLabel.bottomAnchor,constant: 10),
+                    priceTLlabel.centerXAnchor.constraint(equalTo: centerXAnchor),
                     
                     
                     
@@ -87,9 +87,9 @@ class PortfolioCell: UICollectionViewCell, SelfConfiguringCell {
     
     public func configure(collectionPortfolio : collectionPortfolio){
         DispatchQueue.main.async {
-            self.Namelabel.text! = collectionPortfolio.name
-            self.PriceLabel.text! = String(format: "%.2f", collectionPortfolio.price)
-            self.PriceTLlabel.text! = String(format: "%.2f ₺", collectionPortfolio.priceTL)
+            self.namelabel.text! = collectionPortfolio.name
+            self.priceLabel.text! = String(format: "%.2f", collectionPortfolio.price)
+            self.priceTLlabel.text! = String(format: "%.2f ₺", collectionPortfolio.priceTL)
         }
     }
 }

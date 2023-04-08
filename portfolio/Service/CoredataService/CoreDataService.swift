@@ -10,13 +10,13 @@ import CoreData
 import UIKit
 
 protocol CoreDataServiceProtocol {
-    func savePortfolio(portfolio : portfolio, curr : Double, completion: @escaping (Result<Bool,Error>) -> Void)
-    func getPortfolio(completion:  @escaping (Result<[portfolio],Error>) -> Void)
+    func savePortfolio(portfolio : Portfolios, curr : Double, completion: @escaping (Result<Bool,Error>) -> Void)
+    func getPortfolio(completion:  @escaping (Result<[Portfolios],Error>) -> Void)
     func saveDailyTable(totalValue : Double)
-    func getDailyTable(completion:  @escaping (Result<[DailyPortfolios],Error>) -> Void)
+    func getLastWeekTable(completion:  @escaping (Result<[DailyPortfolios],Error>) -> Void)
     func getWeeklyTable(completion: @escaping (Result<[[DailyPortfolios]],Error>) -> Void)
     func getMonthlyTable(completion: @escaping (Result<[String : [Double]],Error>) -> Void)
-    func getTransactions(completion:  @escaping (Result<[portfolio],Error>) -> Void)
+    func getTransactions(completion:  @escaping (Result<[Portfolios],Error>) -> Void)
 }
 
 class CoreDataService : CoreDataServiceProtocol {
@@ -96,26 +96,28 @@ class CoreDataService : CoreDataServiceProtocol {
         }
     }
     
-    func fakeDataGenerator(){
-        let context = appDelegate.persistentContainer.viewContext
-        let calendar = Calendar.current
-        let today = calendar.startOfDay(for: Date().endOfDay)
-        for i in 1...100 {
-            let firstDay = calendar.date(byAdding: .day, value: -i, to: today)!
-            
-            do {
-                let dp = DailyPortfolio(context: context)
-                dp.totalValue = Double.random(in: 3000..<30000)
-                dp.day = firstDay
-                try context.save()
-            } catch {
-                
-            }
-        }
-    }
+        /**
+         func fakeDataGenerator(){
+             let context = appDelegate.persistentContainer.viewContext
+             let calendar = Calendar.current
+             let today = calendar.startOfDay(for: Date().endOfDay)
+             for i in 1...100 {
+                 let firstDay = calendar.date(byAdding: .day, value: -i, to: today)!
+                 
+                 do {
+                     let dp = DailyPortfolio(context: context)
+                     dp.totalValue = Double.random(in: 3000..<30000)
+                     dp.day = firstDay
+                     try context.save()
+                 } catch {
+                     
+                 }
+             }
+         }
+         */
     
     
-    func savePortfolio(portfolio : portfolio, curr : Double, completion: @escaping (Result<Bool,Error>) -> Void){
+    func savePortfolio(portfolio : Portfolios, curr : Double, completion: @escaping (Result<Bool,Error>) -> Void){
         
         let context = appDelegate.persistentContainer.viewContext
         
@@ -147,8 +149,8 @@ class CoreDataService : CoreDataServiceProtocol {
     }
     
     
-    func getPortfolio(completion:  @escaping (Result<[portfolio],Error>) -> Void){
-        var portArray : [portfolio] = [portfolio]()
+    func getPortfolio(completion:  @escaping (Result<[Portfolios],Error>) -> Void){
+        var portArray : [Portfolios] = [Portfolios]()
         var nameTotals : [String : Double] = [:]
         
         let context = appDelegate.persistentContainer.viewContext
@@ -158,7 +160,7 @@ class CoreDataService : CoreDataServiceProtocol {
             let portfolios = try context.fetch(fetchRequest)
             
             for port in portfolios {
-                if let name = port.name, let amount = port.value as? Double {
+                if let name = port.name, let amount = port.value as? Double  {
                            if let currentTotal = nameTotals[name] {
                                nameTotals[name] = currentTotal + amount
                            } else {
@@ -168,7 +170,7 @@ class CoreDataService : CoreDataServiceProtocol {
             }
             
             for (name, total) in nameTotals {
-                portArray.append(portfolio(name: name, value: total))
+                portArray.append(Portfolios(name: name, value: total))
                 UserDefaults.standard.setValue(total, forKey: name)
             }
             UserDefaults.standard.synchronize()
@@ -182,19 +184,19 @@ class CoreDataService : CoreDataServiceProtocol {
     }
     
     
-    func getTransactions(completion:  @escaping (Result<[portfolio],Error>) -> Void){
-        var portArray : [portfolio] = [portfolio]()
+    func getTransactions(completion:  @escaping (Result<[Portfolios],Error>) -> Void){
+        var portArray : [Portfolios] = [Portfolios]()
         
         let context = appDelegate.persistentContainer.viewContext
         let fetchRequest : NSFetchRequest<Portfolio> = Portfolio.fetchRequest()
-        fetchRequest.fetchLimit = 15
+        fetchRequest.fetchLimit = 10
         fetchRequest.sortDescriptors = [NSSortDescriptor(key: "createdTime", ascending: false)]
         
         do {
             let portfolios = try context.fetch(fetchRequest)
             
             for port in portfolios {
-                portArray.append(portfolio(name: port.name ?? "", value: port.value, createdTime: port.createdTime, createdTimeString: port.createdTimeStr, totalValue: port.totalValue, currency: port.currency))
+                portArray.append(Portfolios(name: port.name ?? "", value: port.value, createdTime: port.createdTime, createdTimeString: port.createdTimeStr, totalValue: port.totalValue, currency: port.currency))
             }
             
             completion(.success(portArray))
@@ -205,7 +207,7 @@ class CoreDataService : CoreDataServiceProtocol {
         }
     }
     
-    func getDailyTable(completion:  @escaping (Result<[DailyPortfolios],Error>) -> Void){
+    func getLastWeekTable(completion:  @escaping (Result<[DailyPortfolios],Error>) -> Void){
         
         checkDailyTableDate()
         

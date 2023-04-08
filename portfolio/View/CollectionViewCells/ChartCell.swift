@@ -22,13 +22,14 @@ class ChartCell: UICollectionViewCell, SelfConfiguringCell {
        }
        
     func configure(view : UIView) {
-        // Burayı Sor Nasıl Daha temiz yazılır?
+        
         if let firstView = subviews.first{
             firstView.removeFromSuperview()
         }
         view.frame = CGRect(x: 0, y: 0, width: frame.width, height: frame.height)
         view.subviews.last?.frame = view.frame
         addSubview(view)
+        layer.cornerRadius = 10
         backgroundColor = .secondarySystemFill
             
        }
