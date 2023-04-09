@@ -35,16 +35,25 @@ final class PortfolioViewModelTests: XCTestCase {
     
     func testUpdateView_whenAPIReturnSucces_showsCurrencies() throws {
         
-        let mockCurrencies =  """
-                            {
-                              "data": {
-                                "CAD": 0.070308,
-                                "EUR": 0.048202,
-                                "GBP": 0.042383,
-                                "USD": 0.052086
-                              }
-                            }
-                            """.data(using: .utf8)!
+      /*
+       let mockCurrencies =  """
+                           {
+                             "data": {
+                               "CAD": 0.070308,
+                               "EUR": 0.048202,
+                               "GBP": 0.042383,
+                               "USD": 0.052086
+                             }
+                           }
+                           """.data(using: .utf8)!
+       */
+        
+        let mockCurrencies = Currency(data: [ "CAD": 0.1,
+                                              "EUR": 0.2,
+                                              "GBP": 0.5,
+                                              "USD": 1.0
+                                           ]
+)
         
         networkService.fetchMockResult = .success(mockCurrencies)
 
@@ -225,12 +234,17 @@ class MockPortfolioViewControllerDelegate : PortfolioViewControllerDelegate {
 
 class MockNetworkService : NetworkServiceProtocol {
     
-    var fetchMockResult : Result<Data, Error>?
-    func getData(url: URL, completion: @escaping (Result<Data, Error>) -> Void) {
-        if let result = fetchMockResult {
-            completion(result)
+    var fetchMockResult : Result<Any, Error>?
+    
+    func getData<T>(url: URL, expecting: T.Type, completion: @escaping (Result<T, Error>) -> Void) where T : Decodable {
+        if let result = fetchMockResult{
+            completion(result as! (Result<T, Error>))
         }
     }
+    
+    
+  
+ 
 }
 
 

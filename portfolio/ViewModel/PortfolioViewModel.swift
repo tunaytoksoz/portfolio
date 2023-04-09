@@ -37,19 +37,33 @@ class PortfolioViewModel {
         return url
     }
 
+    /**
+     networkService.getData(url: url) { result in
+         switch result {
+         case .success(let data):
+             do {
+                 let currencies = try JSONDecoder().decode(Currency.self, from: data)
+                 
+                 self.delegate?.updateCurrencyLabels(keys: self.groupedData.groupedKeys(array: Array(currencies.data.keys)),
+                                                     values: self.groupedData.groupedValues(array: Array(currencies.data.values)), currencies: currencies, isSucces: true)
+             } catch{
+                 self.delegate?.updateCurrencyLabels(keys: [[]], values: [[]], currencies: Currency(data: [:]), isSucces: false)
+             }
+         case .failure(let failure):
+             print(failure.localizedDescription)
+             self.delegate?.updateCurrencyLabels(keys: [[]], values: [[]], currencies: Currency(data: [:]), isSucces: false)
+         }
+     }
+     */
+    
+    
     func getCurrency() {
         if let url = createURL(){
-            networkService.getData(url: url) { result in
+            networkService.getData(url: url, expecting: Currency.self) { result in
                 switch result {
-                case .success(let data):
-                    do {
-                        let currencies = try JSONDecoder().decode(Currency.self, from: data)
-                        
-                        self.delegate?.updateCurrencyLabels(keys: self.groupedData.groupedKeys(array: Array(currencies.data.keys)),
-                                                            values: self.groupedData.groupedValues(array: Array(currencies.data.values)), currencies: currencies, isSucces: true)
-                    } catch{
-                        self.delegate?.updateCurrencyLabels(keys: [[]], values: [[]], currencies: Currency(data: [:]), isSucces: false)
-                    }
+                case .success(let currencies):
+                    self.delegate?.updateCurrencyLabels(keys: self.groupedData.groupedKeys(array: Array(currencies.data.keys)),
+                                                        values: self.groupedData.groupedValues(array: Array(currencies.data.values)), currencies: currencies, isSucces: true)
                 case .failure(let failure):
                     print(failure.localizedDescription)
                     self.delegate?.updateCurrencyLabels(keys: [[]], values: [[]], currencies: Currency(data: [:]), isSucces: false)
