@@ -23,7 +23,6 @@ extension PortfolioViewController : UICollectionViewDelegate, UICollectionViewDa
                 return SectionGenerator.shared.createTransactionsSection()
             }
         }
-
         let config = UICollectionViewCompositionalLayoutConfiguration()
         config.interSectionSpacing = 10
         layout.configuration = config

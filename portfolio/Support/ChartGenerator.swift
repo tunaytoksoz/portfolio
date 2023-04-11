@@ -179,7 +179,7 @@ class ChartGenerator : ChartGeneratorProtocol {
                 entryPortfolios.append(entry)
             }
  
-            let dataSet = PieChartDataSet(entries: entryPortfolios, label: "My Portfolio")
+            let dataSet = PieChartDataSet(entries: entryPortfolios, label: "Portföyüm")
             dataSet.colors = ChartColorTemplates.colorful()
             
             let data = PieChartData(dataSet: dataSet)

@@ -116,23 +116,28 @@ class PortfolioViewController: UIViewController {
 
 }
 
+// MARK: - Delegate
 extension PortfolioViewController : PortfolioViewControllerDelegate{
     
     func updateCurrencyLabels(keys: [[String]], values: [[Double]], currencies: Currency, isSucces: Bool) {
         DispatchQueue.main.async {
-            self.keys = keys
-            self.values = values
-            self.currencies = currencies.data
-            self.portfolioViewModel.fillPortfolio(currencies: currencies.data)
-            self.collectionView.reloadData()
+            if isSucces {
+                self.keys = keys
+                self.values = values
+                self.currencies = currencies.data
+                self.portfolioViewModel.fillPortfolio(currencies: currencies.data)
+                self.collectionView.reloadData()
+            }
         }
     }
     
     func fillPortfolio(collectionArray: [collectionPortfolio], isSucces: Bool) {
         DispatchQueue.main.async {
-            self.portfolioArray = collectionArray
-            self.portfolioViewModel.createPieChart(collectionArray: collectionArray)
-            self.collectionView.reloadData()
+            if isSucces {
+                self.portfolioArray = collectionArray
+                self.portfolioViewModel.createPieChart(collectionArray: collectionArray)
+                self.collectionView.reloadData()
+            }
         }
     }
     

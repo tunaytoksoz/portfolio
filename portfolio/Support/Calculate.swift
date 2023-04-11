@@ -34,11 +34,9 @@ class Calculate : CalculateProtocol {
         for array in collectinArray {
             total += array.priceTL
         }
-        
         for array in collectinArray {
             percentArray[array.name] = array.priceTL * 100 / total
         }
-        
         return percentArray
     }
     
