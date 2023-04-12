@@ -10,9 +10,7 @@ import UIKit
 
 
 class SectionGenerator {
-    
     static let shared = SectionGenerator()
-    
     func createCurrencySection() -> NSCollectionLayoutSection {
         
         let item = NSCollectionLayoutItem.init(layoutSize: .init(widthDimension: .fractionalWidth(1), heightDimension: .fractionalHeight(1)))
@@ -25,7 +23,6 @@ class SectionGenerator {
         section.orthogonalScrollingBehavior = .continuous
         return section
     }
-    
     func createChartsSection() -> NSCollectionLayoutSection {
         
         let item = NSCollectionLayoutItem(layoutSize: .init(widthDimension: .fractionalWidth(1), heightDimension: .fractionalHeight(1)))
@@ -40,7 +37,6 @@ class SectionGenerator {
         
         return section
     }
-    
     func createPortfolioSection() -> NSCollectionLayoutSection {
         
         let item = NSCollectionLayoutItem(layoutSize: .init(widthDimension: .fractionalWidth(0.5), heightDimension: .absolute(150)))
@@ -59,7 +55,6 @@ class SectionGenerator {
         
         return section
     }
-    
     func createTransactionsSection() -> NSCollectionLayoutSection {
         
         let item = NSCollectionLayoutItem(layoutSize: .init(widthDimension: .fractionalWidth(1), heightDimension: .absolute(60)))
@@ -78,5 +73,4 @@ class SectionGenerator {
         section.boundarySupplementaryItems = [header]
         return section
     }
-    
 }

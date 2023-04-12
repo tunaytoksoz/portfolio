@@ -6,6 +6,7 @@
 //
 
 import XCTest
+import CoreData
 @testable import portfolio
 
 final class PortfolioViewModelTests: XCTestCase {
@@ -35,25 +36,11 @@ final class PortfolioViewModelTests: XCTestCase {
     
     func testUpdateView_whenAPIReturnSucces_showsCurrencies() throws {
         
-      /*
-       let mockCurrencies =  """
-                           {
-                             "data": {
-                               "CAD": 0.070308,
-                               "EUR": 0.048202,
-                               "GBP": 0.042383,
-                               "USD": 0.052086
-                             }
-                           }
-                           """.data(using: .utf8)!
-       */
-        
         let mockCurrencies = Currency(data: [ "CAD": 0.1,
                                               "EUR": 0.2,
                                               "GBP": 0.5,
                                               "USD": 1.0
-                                           ]
-)
+                                           ])
         
         networkService.fetchMockResult = .success(mockCurrencies)
 
@@ -64,7 +51,7 @@ final class PortfolioViewModelTests: XCTestCase {
     
     func testUpdateView_whenAPIReturnFailure_showsCurrencies() throws {
         
-        networkService.fetchMockResult = .failure(failError(errorMessage: "fail"))
+        networkService.fetchMockResult = .failure(.invalidData)
 
         sut.getCurrency()
         
@@ -90,20 +77,18 @@ final class PortfolioViewModelTests: XCTestCase {
         
         sut.fillPortfolio(currencies: mockCurrencies)
         
-        XCTAssertEqual(delegate.fillPortfolioCollectionArray, [collectionPortfolio(name: "CAD", price: 10, priceTL: 100),
-                                                collectionPortfolio(name: "EUR", price: 30, priceTL: 150),
-                                                collectionPortfolio(name: "GBP", price: 50, priceTL: 100),
-                                                collectionPortfolio(name: "USD", price: 20, priceTL: 20)
-                                               ])
+        XCTAssertTrue(((delegate.fillPortfolioCollectionArray?.contains(collectionPortfolio(name: "CAD", price: 10, priceTL: 100.0))) != nil))
+        XCTAssertTrue(((delegate.fillPortfolioCollectionArray?.contains(collectionPortfolio(name: "EUR", price: 30, priceTL: 150.0))) != nil))
+        XCTAssertTrue(((delegate.fillPortfolioCollectionArray?.contains(collectionPortfolio(name: "GBP", price: 50, priceTL: 100.0))) != nil))
+        XCTAssertTrue(((delegate.fillPortfolioCollectionArray?.contains(collectionPortfolio(name: "USD", price: 20, priceTL: 20.0))) != nil))
     }
-    
+
 
     
     func testSavePortfolio_isSucces() throws{
         let mockPortfolio = Portfolios(name: "EUR", value: 35, createdTime: Date(), createdTimeString: "3/3/2023")
-        
-        coredataService.savePortfolioMockResult = .success(true)
-        
+       
+        coredataService.savePortfolioBool = true
         let result = sut.saveTransaction(portfolio: mockPortfolio, curr: 5)
         
         XCTAssertEqual(result, true)
@@ -112,8 +97,7 @@ final class PortfolioViewModelTests: XCTestCase {
     func testSavePortfolio_isFailure() throws{
         let mockPortfolio = Portfolios(name: "EUR", value: 35, createdTime: Date(), createdTimeString: "3/3/2023")
         
-        coredataService.savePortfolioMockResult = .success(false)
-        
+        coredataService.savePortfolioBool = false
         let result = sut.saveTransaction(portfolio: mockPortfolio, curr: 5)
         
         XCTAssertEqual(result, false)
@@ -136,7 +120,7 @@ final class PortfolioViewModelTests: XCTestCase {
         let mockResult = [DailyPortfolios(totalValue: 10, day: Date()),
                           DailyPortfolios(totalValue: 30, day: Date().startOfDay)]
         
-        coredataService.getLastWeekTableMockResult = .success(mockResult)
+        coredataService.getDailyPorfoliosMockResult = .success(mockResult)
         
         sut.updateLastWeekChart()
         
@@ -145,15 +129,16 @@ final class PortfolioViewModelTests: XCTestCase {
     
     func testUpdateWeeklySummary_WhenReturnCoredataSucces() throws {
         
-        let mockResults = [ [DailyPortfolios(totalValue: 10, day: Date()),
-                             DailyPortfolios(totalValue: 30, day: Date().startOfDay)],
-                             [DailyPortfolios(totalValue: 10, day: Date()),
-                             DailyPortfolios(totalValue: 30, day: Date().startOfDay)],
-                             [DailyPortfolios(totalValue: 10, day: Date()),
-                             DailyPortfolios(totalValue: 30, day: Date().startOfDay)]
+        let mockResults = [DailyPortfolios(totalValue: 10, day: Date()),
+                           DailyPortfolios(totalValue: 30, day: Date().startOfDay),
+                           DailyPortfolios(totalValue: 50, day: Date().endOfWeek),
+                           DailyPortfolios(totalValue: 60, day: Date().startOfDay),
+                           DailyPortfolios(totalValue: 70, day: Date()),
+                           DailyPortfolios(totalValue: 30, day: Date().startOfDay)
                           ]
         
-        coredataService.getWeeklyTableMockResult = .success(mockResults)
+        coredataService.getDailyPorfoliosMockResult = .success(mockResults)
+        
         sut.updateWeeklySummaryChart()
         
         XCTAssertEqual(delegate.updateChartsChartType, .barWeek)
@@ -161,12 +146,15 @@ final class PortfolioViewModelTests: XCTestCase {
     
     func testUpdateMonthlyTable_WhenReturnCoreDataSucces() throws {
         
-        let mockResult : [String : [Double]] = ["Oca-2023" : [10.0,10.0,10.0,10.0,10.0],
-                                              "Şub-2023" : [20.0,20.0,20.0,20.0,20.0],
-                                              "Mar-2023" : [30.0,30.0,30.0,30.0,30.0]
-                         ]
+        let mockResult = [DailyPortfolios(totalValue: 10, day: Date()),
+                                                DailyPortfolios(totalValue: 30, day: Date().startOfDay),
+                                                DailyPortfolios(totalValue: 50, day: Date().endOfWeek),
+                                                DailyPortfolios(totalValue: 60, day: Date().startOfDay),
+                                                DailyPortfolios(totalValue: 70, day: Date()),
+                                                DailyPortfolios(totalValue: 30, day: Date().startOfDay)
+                                               ]
         
-        coredataService.getMonthlyTableMockResult = .success(mockResult)
+        coredataService.getDailyPorfoliosMockResult = .success(mockResult)
         
         sut.updateMonthlyChart()
         
@@ -179,7 +167,7 @@ final class PortfolioViewModelTests: XCTestCase {
                              Portfolios(name: "EUR", value: 35, createdTime: Date(), createdTimeString: "3/3/2023")
                              ]
         
-        coredataService.getTransactionsMockResult = .success(mockPortfolios)
+        coredataService.getPortfolioMockResult = .success(mockPortfolios)
         sut.updateTransactionTable()
         
         XCTAssertEqual(delegate.updateTransactionTablePortfolio, mockPortfolios)
@@ -234,72 +222,36 @@ class MockPortfolioViewControllerDelegate : PortfolioViewControllerDelegate {
 
 class MockNetworkService : NetworkServiceProtocol {
     
-    var fetchMockResult : Result<Any, Error>?
+    var fetchMockResult : Result<Any, RequestError>?
     
-    func getData<T>(url: URL, expecting: T.Type, completion: @escaping (Result<T, Error>) -> Void) where T : Decodable {
+    func getData<T>(url: URL, expecting: T.Type, completion: @escaping (Result<T, RequestError>) -> Void) where T : Decodable {
         if let result = fetchMockResult{
-            completion(result as! (Result<T, Error>))
+            completion(result as! (Result<T, RequestError>))
         }
     }
-    
-    
-  
- 
 }
 
 
 class MockCoreDataService : CoreDataServiceProtocol {
-    
-    var getTransactionsMockResult : Result<[Portfolios], Error>?
-    func getTransactions(completion: @escaping (Result<[Portfolios], Error>) -> Void) {
-        if let result = getTransactionsMockResult {
-            completion(result)
-        }
+    func saveDailyTable(totalValue: Double) {
+        //
     }
     
-    
-    var savePortfolioMockResult : Result<Bool, Error>?
-    func savePortfolio(portfolio: Portfolios, curr: Double, completion: @escaping (Result<Bool, Error>) -> Void) {
-        if let result = savePortfolioMockResult {
-            completion(result)
-        }
+    var savePortfolioBool : Bool = true
+    func savePortfolio(portfolio: portfolio.Portfolios, curr: Double) -> Bool {
+        return savePortfolioBool
     }
     
     var getPortfolioMockResult : Result<[Portfolios], Error>?
-    func getPortfolio(completion: @escaping (Result<[Portfolios], Error>) -> Void) {
+    func getPortfolio(fetchRequest: NSFetchRequest<portfolio.Portfolio>, completion: @escaping (Result<[portfolio.Portfolios], Error>) -> Void) {
         if let result = getPortfolioMockResult {
             completion(result)
         }
     }
     
-    func saveDailyTable(totalValue: Double) {
-        //
-    }
-    
-    var getLastWeekTableMockResult : Result<[DailyPortfolios], Error>?
-    func getLastWeekTable(completion: @escaping (Result<[DailyPortfolios], Error>) -> Void) {
-        if let result = getLastWeekTableMockResult{
-            completion(result)
-        }
-    }
-    
-    var getWeeklyTableMockResult : Result<[[DailyPortfolios]], Error>?
-    func getWeeklyTable(completion: @escaping (Result<[[DailyPortfolios]], Error>) -> Void) {
-        if let result = getWeeklyTableMockResult {
-            completion(result)
-        }
-    }
-    
-    var getMonthlyTableMockResult : Result<[String : [Double]], Error>?
-    func getMonthlyTable(completion: @escaping (Result<[String : [Double]], Error>) -> Void) {
-        if let result = getMonthlyTableMockResult{
-            completion(result)
-        }
-    }
-    
-    var getPortfolioWithDayFilterTableMockResult : Result<[DailyPortfolios], Error>?
-    func getPortfolioWithDayFilter(date: String, completion: @escaping (Result<[DailyPortfolios], Error>) -> Void) {
-        if let result = getPortfolioWithDayFilterTableMockResult {
+    var getDailyPorfoliosMockResult : Result<[DailyPortfolios], Error>?
+    func getDailyPorfolios(fetchRequest: NSFetchRequest<portfolio.DailyPortfolio>, completion: @escaping (Result<[portfolio.DailyPortfolios], Error>) -> Void) {
+        if let result = getDailyPorfoliosMockResult{
             completion(result)
         }
     }

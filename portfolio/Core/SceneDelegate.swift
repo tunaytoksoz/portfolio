@@ -22,7 +22,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let calculate : CalculateProtocol = Calculate()
         let chartGenerator : ChartGeneratorProtocol = ChartGenerator()
         let groupedData : GroupedDataProtocol = GroupedData()
-        let cdService : CoreDataServiceProtocol = CoreDataService(groupedData: groupedData)
+        let cdService : CoreDataServiceProtocol = CoreDataService()
         let portfolioViewModel  = PortfolioViewModel(coreDataService: cdService, networkService: networkService, chartGenerator: chartGenerator, groupedData: groupedData, calculate: calculate)
         window.rootViewController = UINavigationController(rootViewController: PortfolioViewController(portfolioViewModel: portfolioViewModel))
         self.window = window
