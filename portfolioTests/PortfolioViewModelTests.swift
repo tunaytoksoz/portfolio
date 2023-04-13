@@ -19,7 +19,6 @@ final class PortfolioViewModelTests: XCTestCase {
     private var grouppedData : GroupedData!
     private var calculate : Calculate!
     
-    
     override func setUpWithError() throws {
         // Put setup code here. This method is called before the invocation of each test method in the class.
         delegate = MockPortfolioViewControllerDelegate()
@@ -29,7 +28,8 @@ final class PortfolioViewModelTests: XCTestCase {
         grouppedData = GroupedData()
         calculate = Calculate()
         
-        sut = PortfolioViewModel(coreDataService: coredataService, networkService: networkService, chartGenerator: chartGenerator, groupedData: grouppedData, calculate: calculate)
+        sut = PortfolioViewModel(coreDataService: coredataService, networkService: networkService,
+                                 chartGenerator: chartGenerator, groupedData: grouppedData, calculate: calculate)
         sut.delegate = delegate
     }
     
